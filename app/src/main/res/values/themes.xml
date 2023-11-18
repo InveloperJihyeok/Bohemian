@@ -6,4 +6,11 @@
     </style>
 
     <style name="Theme.Bohemian" parent="Base.Theme.Bohemian" />
+
+    <style name="Theme.Bohemian.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#ffffff</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_bohemian_logo</item>
+        <item name="android:windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.Bohemian</item>
+    </style>
 </resources>
