@@ -25,5 +25,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:menu="@menu/navigation_main_menu"/>
 
+    <TextView
+        android:id="@+id/emailText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="184dp"
+        android:layout_marginTop="100dp"
+        android:text="E-mail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fragment_container" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

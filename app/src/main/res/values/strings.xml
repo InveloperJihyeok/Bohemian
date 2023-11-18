@@ -2,5 +2,9 @@
     <string name="app_name">Bohemian</string>
     <string name="scrollViewDescription">메인 페이지 스크롤뷰</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="android_client_id">679260123832-s1vr7q0ldg93rrl63ih0af2qs9ih8mpk.apps.googleusercontent.com</string>
+    <string name="web_client_id">679260123832-5gshv6ut1q9g5h39qo8t260vmdfmmd2p.apps.googleusercontent.com</string>
+    <string name="login_complete">로그인에 성공했습니다</string>
+    <string name="login_fail">로그인에 실패했습니다</string>
+    <string name="automatic_login_fail">Google 자동 로그인 실패</string>
 </resources>

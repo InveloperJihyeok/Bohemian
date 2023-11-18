@@ -7,9 +7,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_bohemian_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_bohemian_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Bohemian"
         tools:targetApi="30">
@@ -19,7 +19,7 @@
             android:value="AIzaSyC8rzDiDolWDXdJMc1WbPpxsfLWsuJKNE4"/>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".LogInActivity"
             android:exported="true"
             android:theme="@style/Theme.Bohemian.SplashScreen">
             <intent-filter>
@@ -27,6 +27,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Bohemian"/>
     </application>
 
 </manifest>
