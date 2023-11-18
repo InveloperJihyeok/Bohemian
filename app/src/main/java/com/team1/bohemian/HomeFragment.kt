@@ -23,14 +23,24 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
 
 class HomeFragment: Fragment() {
 
     private lateinit var locationTextView: TextView
+    private lateinit var weatherTextView: TextView
     private lateinit var locationListView: ListView
     private val userList = arrayListOf("User 1", "User 2", "User 3")    //가짜 사용자 데이터 -> 이거를 위치기반 근처 사람들 톡방으로 만들어야함
     private lateinit var geocoder: Geocoder
+    private lateinit var locationManager: LocationManager
+    private lateinit var apiKey: String
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -40,8 +50,11 @@ class HomeFragment: Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false) // fragment 는 false -> 화면 구성 이후 fragment 추가
         locationTextView = view.findViewById(R.id.locationTextView)
+        weatherTextView = view.findViewById(R.id.weatherTextView)
         locationListView = view.findViewById(R.id.locationListView)
         geocoder = Geocoder(requireContext(), Locale.getDefault())
+        locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        apiKey = "a831ee3081bf2791a76306c0c8b222ae"
         return view
     }
 
@@ -102,6 +115,10 @@ class HomeFragment: Fragment() {
             //위치가 변경되었을 때 실행되는 코드
             //여기에서 서버에 위치 정보를 업로드하거나, 주변 사용자를 가져오는 등의 작업 수행
             updateLocationTextView(location.latitude, location.longitude)
+
+            GlobalScope.launch(Dispatchers.Main){
+                getWeatherInfo(location.latitude, location.longitude)
+            }
         }
         override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?){
         }
@@ -124,11 +141,64 @@ class HomeFragment: Fragment() {
             } else {
                 locationTextView.text = "Current Location: Unknown"
             }
-        } catch (e: Exception) {
+        }catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+    data class WeatherResponse(
+        val weather: List<WeatherInfo>,
+        val main: MainInfo
+    )
+    data class WeatherInfo(
+        val main: String,
+        val description: String
+    )
+    data class MainInfo(
+        val temp: Double
+    )
+    interface WeatherApi{
+        @GET("weather")
+        suspend fun getWeather(
+            @Query("lat") latitude: Double,
+            @Query("lon") longitude: Double,
+            @Query("appid") apiKey: String,
+            @Query("units") units: String = "metric"
+        ): WeatherResponse
+    }
+    private suspend fun getWeatherInfo(latitude: Double, longitude: Double){
+        try{
+            val weather = fetchWeatherData(latitude, longitude)
+            weatherTextView.text = "Weather: $weather"
+        }catch (e: Exception){
+            e.printStackTrace()
+            weatherTextView.text = "Weather: Unknown"
+        }
+    }
+
+    private fun createWeatherApi(): WeatherApi{
+        val retrofit = Retrofit.Builder()
+            .baseUrl(Companion.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        return retrofit.create(WeatherApi::class.java)
+    }
+    private suspend fun fetchWeatherData(latitude: Double, longitude: Double): String{
+        try{
+            val weatherApi = createWeatherApi()
+            val response = weatherApi.getWeather(latitude, longitude, apiKey)
+
+            val weatherDescription = response.weather.firstOrNull()?.description?:"Unknown"
+            val temperature = response.main.temp.toString()
+
+            return "$weatherDescription, Temperature: $temperature°C"
+        }catch (e: Exception){
+            e.printStackTrace()
+            return "Weather: Unknown"
         }
     }
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 123
+        private const val BASE_URL = "https://api.openweathermap.org/data/2.5/"
     }
 }
