@@ -37,7 +37,7 @@ class HomeFragment: Fragment() {
     private lateinit var locationTextView: TextView
     private lateinit var weatherTextView: TextView
     private lateinit var locationListView: ListView
-    private val userList = arrayListOf("User 1", "User 2", "User 3")    //가짜 사용자 데이터 -> 이거를 위치기반 근처 사람들 톡방으로 만들어야함
+    private val userList = arrayListOf("맛집 투어 갈 동행 구해요~", "카페 갈 사람ㄱ", "서로 인생샷 건져주실 분")    //가짜 사용자 데이터 -> 이거를 위치기반 근처 사람들 톡방으로 만들어야함
     private lateinit var geocoder: Geocoder
     private lateinit var locationManager: LocationManager
     private lateinit var apiKey: String
