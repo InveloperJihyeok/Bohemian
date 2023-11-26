@@ -84,10 +84,10 @@ class HomeFragment: Fragment() {
             val selectedUser = userList[position]
             Toast.makeText(requireContext(), "Clicked on $selectedUser", Toast.LENGTH_SHORT).show()
 
-            //chatFragment로 이동
-            val chatsFragment = ChatsFragment.newInstance(selectedUser)
+            //ChatroomFragment로 이동
+            val chatroomFragment = ChatroomFragment.newInstance(selectedUser)
             val transaction: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragment_container, chatsFragment)
+            transaction.replace(R.id.fragment_container, chatroomFragment)
             transaction.addToBackStack(null)
             transaction.commit()
         }
