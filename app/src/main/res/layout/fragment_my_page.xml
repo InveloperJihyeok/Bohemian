@@ -5,13 +5,79 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView3"
+    <Button
+        android:id="@+id/btn_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="179dp"
-        android:layout_marginTop="292dp"
-        android:text="MyPage"
+        android:layout_marginStart="156dp"
+        android:layout_marginTop="536dp"
+        android:text="Log Out"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Gender: "
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/text_birth_"
+        app:layout_constraintTop_toBottomOf="@+id/text_birth_" />
+
+    <TextView
+        android:id="@+id/text_my_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/text_nickname"
+        app:layout_constraintTop_toTopOf="@+id/text_nickname" />
+
+    <TextView
+        android:id="@+id/text_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="52dp"
+        android:text="Nickname: "
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_birth_"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Birth:"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/text_nickname"
+        app:layout_constraintTop_toBottomOf="@+id/text_nickname" />
+
+    <TextView
+        android:id="@+id/text_my_birth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/text_my_nickname"
+        app:layout_constraintTop_toTopOf="@+id/text_birth_" />
+
+    <TextView
+        android:id="@+id/text_my_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/text_my_birth"
+        app:layout_constraintTop_toTopOf="@+id/text_gender" />
+
+    <Button
+        android:id="@+id/btn_setProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="148dp"
+        android:layout_marginTop="66dp"
+        android:text="Set Profile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_my_gender" />
 </androidx.constraintlayout.widget.ConstraintLayout>

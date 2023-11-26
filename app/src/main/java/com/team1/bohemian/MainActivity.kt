@@ -19,16 +19,12 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-    lateinit var email: TextView
     lateinit var auth:FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         auth = FirebaseAuth.getInstance()
-
-        email = findViewById(R.id.emailText)
-        email.text = auth.currentUser?.email
 
         val bottomNavigation: NavigationBarView = findViewById(R.id.bottom_navigation_bar)
         bottomNavigation.selectedItemId = R.id.navigation_home

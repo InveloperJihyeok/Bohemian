@@ -1,26 +1,36 @@
 {
   "project_info": {
-    "project_number": "1033034538013",
-    "project_id": "bohemian-613df",
-    "storage_bucket": "bohemian-613df.appspot.com"
+    "project_number": "27083356740",
+    "project_id": "bohemian-32f18",
+    "storage_bucket": "bohemian-32f18.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1033034538013:android:9b5da65e321748cfa13af4",
+        "mobilesdk_app_id": "1:27083356740:android:88aa68cce67a741504da11",
         "android_client_info": {
           "package_name": "com.team1.bohemian"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "27083356740-n1lo5b3p4cqbf7sv2f9ejl0cjb4lkp2s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyC-sUDLvCZtDPG2VqM6ipLU8BghOg9GNhc"
+          "current_key": "AIzaSyBbWazlwZcWumCqJjWwHUdoEayce5BOqbw"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "27083356740-n1lo5b3p4cqbf7sv2f9ejl0cjb4lkp2s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

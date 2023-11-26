@@ -31,7 +31,7 @@ class LogInActivity : AppCompatActivity() {
 
     private var binding: ActivityLoginBinding? = null
     // Firebase Authentication 관리 클래스
-    var auth: FirebaseAuth ?= null
+    var auth = FirebaseAuth.getInstance()
 
     // GoogleLogin 관리 클래스
     var googleSignInClient: GoogleSignInClient ?= null
@@ -41,11 +41,8 @@ class LogInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
-        val binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        // Firebase 로그인 통합 관리하는 오브젝트 만들기
-        auth = FirebaseAuth.getInstance()
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding?.root)
 
         // 구글 로그인 옵션
         var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -55,10 +52,47 @@ class LogInActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         // 구글 로그인 버튼
-        binding.btnGoogleLogin.setOnClickListener { googleLogin() }
+        binding?.btnGoogleLogin?.setOnClickListener { googleLogin() }
 
         // 일반 로그인 버튼
-        binding.btnLogin.setOnClickListener { startActivity(Intent(this, MainActivity::class.java)) }
+        binding?.btnLogin?.setOnClickListener { regularLogin() }
+
+        // 아이디 만들기
+        binding?.btnSignup?.setOnClickListener { startActivity(Intent(this, SignUpActivity::class.java)) }
+    }
+
+    fun regularLogin(): Unit{
+        var email = binding?.emailText?.text.toString()
+        var password = binding?.pwText?.text.toString()
+        if (email.isNullOrBlank() || email.isEmpty()) {
+            Toast.makeText(this, "아이디를 입력해주세요", Toast.LENGTH_SHORT).show()
+        } else {
+            if (password.isNullOrBlank() || password.isEmpty()) {
+                Toast.makeText(this, "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show()
+            } else {
+                auth?.signInWithEmailAndPassword(
+                    binding?.emailText?.text.toString(),
+                    binding?.pwText?.text.toString()
+                )?.addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // 아이디 생성이 완료되었을 때
+                        val name = auth?.currentUser?.displayName
+                        if (name == null){
+                            Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, "Hi ${name}!", Toast.LENGTH_SHORT).show()
+                        }
+                        startActivity(Intent(this, MainActivity::class.java))
+                    } else {
+                        // 아이디 생성이 실패했을 경우
+                        Log.e("LogInActivity", "로그인 실패: ${task.exception?.message}")
+                        Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+
     }
 
     fun googleLogin(){
@@ -107,14 +141,8 @@ class LogInActivity : AppCompatActivity() {
             Toast.makeText(this, getString(R.string.login_complete), Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
-        } else {
-            Toast.makeText(this, getString(R.string.automatic_login_fail), Toast.LENGTH_SHORT).show()
         }
     }
 
-    // 회원 가입
-    fun createAndLogin() {
-//        auth?.createUserWithEmailAndPassword(email_)
-    }
 }
 
