@@ -13,4 +13,9 @@
         <item name="android:windowSplashScreenAnimationDuration">1000</item>
         <item name="postSplashScreenTheme">@style/Theme.Bohemian</item>
     </style>
+
+    <style name="BlueItalicText">
+        <item name="android:textColor">#ffffff</item> <!-- 흰색 글씨 -->
+        <item name="android:textStyle">italic</item> <!-- 이탤릭체 스타일 -->
+    </style>
 </resources>
