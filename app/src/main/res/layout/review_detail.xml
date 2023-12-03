@@ -18,14 +18,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/rvitem_profile_image"
+            android:id="@+id/profile_image"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_margin="7.5dp"
             android:src="@mipmap/ic_launcher"
-            app:civ_border_color="transparent"
+            app:civ_border_color="#2196F3"
             app:civ_border_overlay="true"
-            app:civ_border_width="0.5dp"
+            app:civ_border_width="3.5dp"
             tools:ignore="MissingClass" />
 
         <LinearLayout
@@ -101,7 +101,7 @@
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="170dp"
         android:layout_gravity="center"
         android:layout_margin="8dp"
         android:layout_marginTop="24dp"
