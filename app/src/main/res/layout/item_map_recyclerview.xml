@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/itemMapRecyclerView"
     android:layout_width="match_parent"
-    android:layout_height="160dp">
+    android:layout_height="210dp">
 
 
     <TextView
@@ -37,8 +37,10 @@
     <HorizontalScrollView
         android:id="@+id/itemScrollView"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="130dp"
         android:layout_marginTop="12dp"
+        android:layout_gravity="left"
+        android:fillViewport="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_map_title">
 
@@ -46,25 +48,30 @@
             android:id="@+id/itemPictures"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" />
+            android:orientation="horizontal"
+            android:gravity="left"/>
     </HorizontalScrollView>
 
     <TextView
         android:id="@+id/text_map_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="6dp"
         android:text="Tag:"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/item_map_title"
-        app:layout_constraintTop_toBottomOf="@+id/itemScrollView" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemScrollView"
+        app:layout_constraintVertical_bias="0.0" />
 
     <LinearLayout
         android:id="@+id/tagsContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="4dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btn_itemView"
