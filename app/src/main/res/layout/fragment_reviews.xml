@@ -1,17 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".reviews">
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="185dp"
-        android:layout_marginTop="320dp"
-        android:text="Reviews"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:id="@+id/rvBox"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#3365E4"
+        android:fontFamily="sans-serif"
+        android:text="reviews"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="32sp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_below="@id/rvBox"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/locationBox"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            tools:textAlignment="center">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="134dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Current location:"
+                android:textAlignment="viewStart"
+                android:textSize="24dp" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Seoul, Korea"
+                android:textAlignment="viewStart"
+                android:textSize="24dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/searchBox"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_below="@id/locationBox"
+            android:orientation="horizontal">
+
+
+            <SearchView
+                android:id="@+id/rv_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:closeIcon="@android:drawable/btn_dialog"
+                android:queryBackground="@color/black"
+                android:queryHint="Search review" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_weight="0"
+                android:text="Sort by: Date " />
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="70dp"
+                android:layout_weight="0"
+                android:text="Filter: None" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvfragment_recyclerview"
+        android:layout_width="103dp"
+        android:layout_height="704dp" />
+
+
+</RelativeLayout>
