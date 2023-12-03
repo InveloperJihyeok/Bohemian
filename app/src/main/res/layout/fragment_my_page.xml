@@ -54,6 +54,15 @@
         tools:layout_editor_absoluteY="88dp" />
 
     <TextView
+        android:id="@+id/text_nickname3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="user_name"
+        android:textSize="16sp"
+        tools:layout_editor_absoluteX="166dp"
+        tools:layout_editor_absoluteY="88dp" />
+
+    <TextView
         android:id="@+id/text_sentence"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,6 +82,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="411dp"
         android:layout_height="173dp"
         android:orientation="vertical"
@@ -151,5 +161,43 @@
                 tools:srcCompat="@tools:sample/avatars" />
         </LinearLayout>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="158dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="160dp"
+        android:layout_marginBottom="185dp"
+        android:text="Logout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+    <TextView
+        android:id="@+id/textMyNickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="nickname"
+        tools:layout_editor_absoluteX="263dp"
+        tools:layout_editor_absoluteY="88dp" />
+
+    <TextView
+        android:id="@+id/textMyBirth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="birth"
+        tools:layout_editor_absoluteX="273dp"
+        tools:layout_editor_absoluteY="124dp" />
+
+    <TextView
+        android:id="@+id/textMyGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="gender"
+        tools:layout_editor_absoluteX="320dp"
+        tools:layout_editor_absoluteY="150dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
