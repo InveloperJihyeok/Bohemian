@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Typeface
-import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
@@ -17,12 +17,10 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.team1.bohemian.databinding.ItemMapRecyclerviewBinding
-import com.team1.bohemian.R
+import com.google.firebase.storage.FirebaseStorage
 
 
 class RecyclerUserAdapter(private var items: ArrayList<MapItemData>) : RecyclerView.Adapter<RecyclerUserAdapter.ViewHolder>() {
@@ -52,6 +50,10 @@ class RecyclerUserAdapter(private var items: ArrayList<MapItemData>) : RecyclerV
         private val buttonView: Button = v.findViewById(R.id.btn_itemView)
         private val tagsContainer: LinearLayout = v.findViewById(R.id.tagsContainer)
         private val imageContainer: LinearLayout = v.findViewById(R.id.itemPictures)
+
+        // Firebase Storage Reference 생성
+        private val storageReference = FirebaseStorage.getInstance("gs://bohemian-32f18.appspot.com").reference
+
         fun bind(listener: View.OnClickListener, item: MapItemData) {
             titleView.text = item.title
             buttonView.setOnClickListener(listener)
@@ -67,10 +69,7 @@ class RecyclerUserAdapter(private var items: ArrayList<MapItemData>) : RecyclerV
             // 기존에 있는 태그들을 제거
             imageContainer.removeAllViews()
             // item.tags에 있는 각 태그에 대해 동적으로 TextView 생성 및 추가
-            for (image in item.images!!) {
-                val imageView = createImageView(image, imageContainer.resources)
-                imageContainer.addView(imageView)
-            }
+            createImageView(item.id!!)
         }
         private fun createTagTextView(tag: String): TextView {
             val tagTextView = TextView(tagsContainer.context)
@@ -94,45 +93,66 @@ class RecyclerUserAdapter(private var items: ArrayList<MapItemData>) : RecyclerV
                 TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics
             ).toInt()
         }
-        private fun createImageView(imageUrl: String, resources: Resources): ImageView {
-            val imageView = ImageView(imageContainer.context)
-            imageView.layoutParams = LinearLayout.LayoutParams(
-                dpToPx(resources, 200), // 이미지 뷰의 너비 (예: 150dp)
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-            imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-            imageView.setPadding(8, 0, 8, 0) // 이미지 간격을 조절할 수 있습니다.
+        private fun createImageView(reviewId: String) {
+            val reviewReference = storageReference.child("reviews").child("$reviewId")
+            reviewReference.listAll()
+                .addOnSuccessListener { result ->
+                    // 성공적으로 목록을 가져왔을 때
+                    for (item in result.items) {
+                        // 이미지 파일에 대한 다운로드 URL 얻기
+                        item.downloadUrl.addOnSuccessListener { uri ->
+                            // 다운로드 URL을 사용하여 이미지 뷰 동적으로 추가
+                            val imageView = ImageView(imageContainer.context)
+                            val layoutParams = LinearLayout.LayoutParams(
+                                dpToPx(imageView.resources, 130), // 이미지 뷰의 너비 (예: 100픽셀)
+                                dpToPx(imageView.resources, 130)  // 이미지 뷰의 높이 (예: 100픽셀)
+                            )
+                            imageView.layoutParams = layoutParams
+                            imageView.scaleType = ImageView.ScaleType.FIT_START
+                            imageView.setPadding(10,0,10,0)
+                            Glide.with(imageView.context)
+                                .load(uri)
+                                .centerCrop()
+                                .into(imageView)
 
-            // Glide를 사용하여 이미지 로드 및 표시
-            Glide.with(imageContainer)
-                .load(imageView)
-                .into(imageView)
+                            // 이미지 뷰를 부모 레이아웃에 추가
+                            Log.d("MapFragment", "$uri")
+                            imageContainer.addView(imageView)
 
-            // ImageView에 클릭 리스너 추가
-            imageView.setOnClickListener {
-                showPopupWindow(imageContainer.context, imageUrl)
-            }
-
-            return imageView
+                            // ImageView에 클릭 리스너 추가
+                            imageView.setOnClickListener {
+                                showPopupWindow(imageContainer.context, uri)
+                            }
+                        }.addOnFailureListener { exception ->
+                            // 다운로드 URL 가져오기 실패 시
+                            Log.e("MapFragment", "다운로드 URL 가져오기 실패: ${exception.message}")
+                        }
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    // 목록 가져오기 실패 시
+                    Log.e("MapFragment", "목록 가져오기 실패: ${exception.message}")
+                }
         }
         @SuppressLint("MissingInflatedId")
-        private fun showPopupWindow(context: Context, imageUrl: String) {
+        private fun showPopupWindow(context: Context, imageUrl: Uri) {
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val popupView = inflater.inflate(R.layout.popup_layout, null)
+
+            // 팝업창 안의 ImageView 설정
+            val popupImageView: ImageView = popupView.findViewById(R.id.popupImageView)
+//            popupImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+            Glide.with(context)
+                .load(imageUrl)
+                .into(popupImageView)
 
             // 팝업창 생성
             val popupWindow = PopupWindow(
                 popupView,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
+                dpToPx(popupImageView.resources, 350), // 가로 크기 (예: 100dp)
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 true
             )
-
-            // 팝업창 안의 ImageView 설정
-            val popupImageView: ImageView = popupView.findViewById(R.id.popupImageView)
-            Glide.with(context)
-                .load(imageUrl)
-                .into(popupImageView)
 
             // 팝업창 표시 위치 설정 (예: 중앙)
             popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)

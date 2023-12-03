@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="10dp" /> <!-- 둥근 테두리의 반지름을 조절합니다. -->
+    <solid android:color="#E0E0E0" /> <!-- 배경 색상을 설정합니다. -->
+</shape>

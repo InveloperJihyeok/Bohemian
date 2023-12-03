@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <EditText
+                android:id="@+id/editText_reviewTag"
+                style="@style/Widget.AppCompat.EditText"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/edittext_graybox"
+                android:ems="10"
+                android:inputType="text"
+                android:paddingStart="10dp"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toStartOf="@+id/btn_addTag"
+                app:layout_constraintStart_toStartOf="@+id/textView_reviewTag"
+                app:layout_constraintTop_toBottomOf="@+id/textView_reviewTag" />
+
+            <TextView
+                android:id="@+id/textView_reviewTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Tag:"
+                android:textSize="16dp"
+                app:layout_constraintStart_toStartOf="@+id/editText_reviewContent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_reviewContent" />
+
+            <TextView
+                android:id="@+id/textView_reviewPicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Pictures:"
+                android:textSize="16dp"
+                app:layout_constraintStart_toStartOf="@+id/editText_reviewContent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_reviewTag" />
+
+            <TextView
+                android:id="@+id/textView_reviewPicture3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Pictures:"
+                android:textSize="16dp"
+                app:layout_constraintStart_toStartOf="@+id/editText_reviewContent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_reviewTag" />
+
+            <TextView
+                android:id="@+id/textView_uploadType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Upload Type:"
+                android:textSize="16dp"
+                app:layout_constraintStart_toStartOf="@+id/scrollView_reviewPictures"
+                app:layout_constraintTop_toBottomOf="@+id/scrollView_reviewPictures" />
+
+            <TextView
+                android:id="@+id/textView_reviewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="25dp"
+                android:text="Title:"
+                android:textSize="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView_reviewContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Content:"
+                android:textSize="16dp"
+                app:layout_constraintStart_toStartOf="@+id/textView_reviewTitle"
+                app:layout_constraintTop_toBottomOf="@+id/editText_reviewTitle" />
+
+            <EditText
+                android:id="@+id/editText_reviewTitle"
+                style="@style/Widget.AppCompat.EditText"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="25dp"
+                android:background="@drawable/edittext_graybox"
+                android:ems="10"
+                android:inputType="text"
+                android:paddingStart="10dp"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/textView_reviewTitle"
+                app:layout_constraintTop_toBottomOf="@+id/textView_reviewTitle" />
+
+            <EditText
+                android:id="@+id/editText_reviewContent"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="25dp"
+                android:background="@drawable/edittext_graybox"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/textView_reviewTitle"
+                app:layout_constraintTop_toBottomOf="@+id/textView_reviewContent" />
+
+            <Button
+                android:id="@+id/btn_addTag"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="Add"
+                android:textSize="16dp"
+                app:layout_constraintEnd_toEndOf="@+id/editText_reviewContent"
+                app:layout_constraintTop_toTopOf="@+id/editText_reviewTag" />
+
+            <ScrollView
+                android:id="@+id/scrollView_reviewPictures"
+                android:layout_width="0dp"
+                android:layout_height="102dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/btn_addTag"
+                app:layout_constraintStart_toStartOf="@+id/textView_reviewPicture"
+                app:layout_constraintTop_toBottomOf="@+id/textView_reviewPicture">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/addImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        app:srcCompat="@drawable/background_add_picture" />
+                </LinearLayout>
+            </ScrollView>
+
+            <Button
+                android:id="@+id/btn_saveReview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="Save"
+                android:textSize="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_uploadReview"
+                app:layout_constraintStart_toStartOf="@+id/scrollView_reviewPictures" />
+
+            <Button
+                android:id="@+id/btn_uploadReview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="Upload"
+                android:textSize="16dp"
+                app:layout_constraintEnd_toEndOf="@+id/scrollView_reviewPictures"
+                app:layout_constraintStart_toEndOf="@+id/btn_saveReview"
+                app:layout_constraintTop_toTopOf="@+id/btn_saveReview" />
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@+id/textView_uploadType"
+                app:layout_constraintStart_toEndOf="@+id/textView_uploadType"
+                app:layout_constraintTop_toTopOf="@+id/textView_uploadType">
+
+                <RadioButton
+                    android:id="@+id/radioButton_reviewPublic"
+                    android:layout_width="89dp"
+                    android:layout_height="match_parent"
+                    android:text="Public"
+                    android:textSize="16dp" />
+
+                <RadioButton
+                    android:id="@+id/radioButton_reviewPrivate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Private"
+                    android:textSize="16dp" />
+            </RadioGroup>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

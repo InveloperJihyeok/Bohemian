@@ -132,10 +132,11 @@ class MapFragment : BottomSheetDialogFragment(), OnMapReadyCallback {
             val specificReviewRef = reviewRef.child(reviewId)
             specificReviewRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    val id = snapshot.child("id").getValue<String>()
                     val title = snapshot.child("title").getValue<String>()
                     val tags = snapshot.child("tags").getValue<MutableList<String>>()
                     val images = snapshot.child("images").getValue<MutableList<String>>()
-                    reviewDataList.add(MapItemData(title, tags, images))
+                    reviewDataList.add(MapItemData(id, title, tags, images))
 
                     // Firebase에서 가져온 리뷰 추가
                     val adapter = RecyclerUserAdapter(reviewDataList)
@@ -200,40 +201,46 @@ class MapFragment : BottomSheetDialogFragment(), OnMapReadyCallback {
     private fun initializePersistentBottomSheet(view: CoordinatorLayout) {
 
         val bottomSheetLayout = view?.findViewById<LinearLayout>(R.id.bottom_sheet_layout)
+        var previousSlideOffset = 0f
+        var previousState = 0
 
         // BottomSheetBehavior에 layout 설정
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout!!)
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-
-                // BottomSheetBehavior state에 따른 이벤트
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
-                        Log.d("MainActivity", "state: hidden")
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
-                        Log.d("MainActivity", "state: expanded")
+                        previousState = bottomSheetBehavior.state
                     }
                     BottomSheetBehavior.STATE_COLLAPSED -> {
-                        Log.d("MainActivity", "state: collapsed")
+                        previousState = bottomSheetBehavior.state
                     }
                     BottomSheetBehavior.STATE_DRAGGING -> {
-                        Log.d("MainActivity", "state: dragging")
                     }
                     BottomSheetBehavior.STATE_SETTLING -> {
-                        Log.d("MainActivity", "state: settling")
                     }
                     BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                        Log.d("MainActivity", "state: half expanded")
+                        previousState = bottomSheetBehavior.state
                     }
                 }
-
             }
-
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            }
+                if (previousSlideOffset > slideOffset) {
+                    Log.d("BottomSheet", "아래 드래그")
+                    if(previousState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
 
+                    }
+                } else {
+                    Log.d("BottomSheet", "위 드래그")
+                    if(previousState == BottomSheetBehavior.STATE_HALF_EXPANDED) {
+
+                    }
+                }
+                previousSlideOffset = slideOffset
+            }
         })
 
     }
