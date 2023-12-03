@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
@@ -54,8 +54,7 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="0"
             android:background="#4095DD"
-            android:text="Follow"
-            app:shapeAppearance="round" />
+            android:text="Follow"/>
 
 
     </LinearLayout>

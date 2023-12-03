@@ -14,7 +14,7 @@
             android:id="@+id/imageView6"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@tools:sample/avatars" />
+            android:src="@drawable/avatar" />
 
         <ProgressBar
             android:id="@+id/progressBar2"

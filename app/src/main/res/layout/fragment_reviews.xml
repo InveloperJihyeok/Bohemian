@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".reviews">
+    tools:context=".ReviewsFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/rvBox"
@@ -17,17 +18,16 @@
         android:textColor="@android:color/white"
         android:textSize="32sp" />
 
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="match_parent"
         android:layout_below="@id/rvBox"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/locationBox"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal"
@@ -52,33 +52,24 @@
                 android:textSize="24dp" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/searchBox"
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/rv_search"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:layout_below="@id/locationBox"
-            android:orientation="horizontal">
-
-
-            <SearchView
-                android:id="@+id/rv_search"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:closeIcon="@android:drawable/btn_dialog"
-                android:queryBackground="@color/black"
-                android:queryHint="Search review" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:closeIcon="@android:drawable/btn_dialog"
+            android:queryBackground="@color/black"
+            android:queryHint="Search review" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="0"
                 android:text="Sort by: Date " />
 
@@ -86,18 +77,25 @@
                 android:id="@+id/button3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="70dp"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="0"
                 android:text="Filter: None" />
 
+            <Button
+                android:id="@+id/btn_writeReview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="0"
+                android:text="Write" />
+
         </LinearLayout>
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvfragment_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/review_detail"/>
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvfragment_recyclerview"
-        android:layout_width="103dp"
-        android:layout_height="704dp" />
-
-
 </RelativeLayout>
