@@ -3,6 +3,7 @@ package com.team1.bohemian
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.location.Location
 import android.location.LocationListener
 import android.content.pm.PackageManager
@@ -85,11 +86,9 @@ class HomeFragment: Fragment() {
             Toast.makeText(requireContext(), "Clicked on $selectedUser", Toast.LENGTH_SHORT).show()
 
             //ChatroomFragment로 이동
-            val chatroomFragment = ChatroomFragment.newInstance(selectedUser)
-            val transaction: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragment_container, chatroomFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
+            val intent = Intent(requireContext(), MessageActivity::class.java)
+            intent.putExtra("destinationUid", selectedUser)
+            startActivity(intent)
         }
     }
 

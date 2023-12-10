@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.navigation_chats -> {
-                    replaceFragment(ChatsFragment())
+                    replaceFragment(ChatFragment())
                     return@setOnItemSelectedListener true
                 }
                 R.id.navigation_my_page -> {

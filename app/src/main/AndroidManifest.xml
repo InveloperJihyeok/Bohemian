@@ -34,6 +34,11 @@
             android:theme="@style/Theme.Bohemian"/>
 
         <activity
+            android:name=".MessageActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Bohemian"/>
+
+        <activity
             android:name=".SignUpActivity"
             android:exported="true"
             android:theme="@style/Theme.Bohemian"/>
