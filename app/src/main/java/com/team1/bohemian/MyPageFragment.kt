@@ -57,6 +57,8 @@ class MyPageFragment: Fragment() {
         return view
     }
 
+    // 프로필 이미지 등록 필요함
+
     private fun loadProfileData() {
         userRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -64,10 +66,12 @@ class MyPageFragment: Fragment() {
                     val nickname = snapshot.child("nickname").getValue<String>()
                     val birth = snapshot.child("age").getValue<String>()
                     val gender = snapshot.child("gender").getValue<String>()
+                    //val subscriber = snapshot.child("subscriber number).getValue<String>()
 
                     binding?.textMyNickname?.setText(nickname)
                     binding?.textMyBirth?.text = birth
                     binding?.textMyGender?.text = gender
+                    // binding?.textSubscriber?.text = subscriber
                 }
             }
             override fun onCancelled(error: DatabaseError) {

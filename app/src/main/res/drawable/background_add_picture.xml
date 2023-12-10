@@ -1,0 +1,35 @@
+<!-- cross_with_gray_background.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Gray Background -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#CCCCCC" /> <!-- Change to your desired gray color -->
+        </shape>
+    </item>
+
+    <!-- White Cross (horizontal line) -->
+    <item
+        android:left="26dp"
+        android:right="26dp"
+        android:top="50dp"
+        android:bottom="50dp"> <!-- Adjust padding as needed -->
+        <shape android:shape="rectangle">
+            <size android:width="50dp" android:height="2dp" /> <!-- Change the height of the line -->
+            <solid android:color="#FFFFFF" /> <!-- Change to your desired white color -->
+        </shape>
+    </item>
+
+    <!-- White Cross (vertical line) -->
+    <item
+        android:left="50dp"
+        android:right="50dp"
+        android:top="26dp"
+        android:bottom="26dp"> <!-- Adjust padding as needed -->
+        <shape android:shape="rectangle">
+            <size android:width="2dp" android:height="50dp" /> <!-- Change the width of the line -->
+            <solid android:color="#FFFFFF" /> <!-- Change to your desired white color -->
+        </shape>
+    </item>
+
+</layer-list>
