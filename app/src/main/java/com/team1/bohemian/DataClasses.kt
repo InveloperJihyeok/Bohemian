@@ -1,5 +1,6 @@
 package com.team1.bohemian
 
+import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -17,7 +18,6 @@ data class ReviewData(
     var title: String?,
     var contents: String?,
     var tags: MutableList<String>?,
-    val images: MutableList<String>?
 )
 
 @Entity(tableName = "location_data")

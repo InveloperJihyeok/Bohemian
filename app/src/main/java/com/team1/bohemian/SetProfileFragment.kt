@@ -1,7 +1,9 @@
 package com.team1.bohemian
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,22 +23,21 @@ import java.util.Calendar
 
 class SetProfileFragment: Fragment() {
 
-    private lateinit var database: FirebaseDatabase
+    private var database = FirebaseDatabase.getInstance("https://bohemian-32f18-default-rtdb.asia-southeast1.firebasedatabase.app/")
     private lateinit var userRef: DatabaseReference
 
     private var binding: FragmentSetProfileBinding? = null
-
+    private lateinit var sharedPref: SharedPreferences
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         binding = FragmentSetProfileBinding.inflate(layoutInflater)
         val view = binding?.root
 
-        database = FirebaseDatabase.getInstance("https://bohemian-32f18-default-rtdb.asia-southeast1.firebasedatabase.app/")
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        sharedPref = requireActivity().getSharedPreferences("userInfo",Context.MODE_PRIVATE)
+        val userId = sharedPref.getString("uid","")
         userRef = database.reference.child("users").child(userId!!)
 
         // 데이터 로드 및 설정
@@ -98,6 +99,12 @@ class SetProfileFragment: Fragment() {
 
             Toast.makeText(requireContext(), "Profile updated", Toast.LENGTH_SHORT).show()
             Log.d("SetProfileFragment", "Profile updated")
+            with(sharedPref.edit()){
+                putString("nickname",nickname)
+                putString("birth",birth)
+                putString("gender",gender)
+                apply()
+            }
             requireActivity().supportFragmentManager.popBackStack()
         } else {
             Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()

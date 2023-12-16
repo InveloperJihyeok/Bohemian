@@ -1,6 +1,7 @@
 package com.team1.bohemian
 
 import android.content.ClipData
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -114,10 +115,9 @@ class ReviewsFragment: Fragment() {
                         val uid = snapshot.child("uid").getValue(String::class.java)
                         val nickname = snapshot.child("nickname").getValue(String::class.java)
                         val title = snapshot.child("title").getValue(String::class.java)
-                        val imagesList = snapshot.child("images").children.map { it.value as String }.toMutableList()
                         val tagsList = snapshot.child("tags").children.map { it.value as String }.toMutableList()
 
-                        val reviewData = ReviewData(id,uid,nickname,title,"",tagsList,imagesList)
+                        val reviewData = ReviewData(id,uid,nickname,title,"",tagsList)
                         addItem(reviewData)
                     } else {
                         Log.e("Review", "Data is not exist")

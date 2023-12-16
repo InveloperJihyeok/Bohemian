@@ -1,6 +1,7 @@
 package com.team1.bohemian
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -76,13 +77,15 @@ class LogInActivity : AppCompatActivity() {
                 )?.addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // 아이디 생성이 완료되었을 때
-                        val name = auth?.currentUser?.displayName
-                        if (name == null){
+                        val user = FirebaseAuth.getInstance().addAuthStateListener{firebaseAuth ->
+                            val sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE)
+                            with(sharedPref.edit()){
+                                putString("uid",firebaseAuth.currentUser?.uid.toString())
+                                apply()
+                            }
                             Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(this, "Hi ${name}!", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this, MainActivity::class.java))
                         }
-                        startActivity(Intent(this, MainActivity::class.java))
                     } else {
                         // 아이디 생성이 실패했을 경우
                         Log.e("LogInActivity", "로그인 실패: ${task.exception?.message}")
@@ -97,7 +100,6 @@ class LogInActivity : AppCompatActivity() {
 
     fun googleLogin(){
         googleSignInClient?.signOut()?.addOnCompleteListener(this) {
-            // Google 로그인 다시 시작
             var signInIntent = googleSignInClient?.signInIntent
             signInIntent?.let { startActivityForResult(it, GOOGLE_LOGIN_CODE) }
         }
@@ -117,13 +119,15 @@ class LogInActivity : AppCompatActivity() {
 
     fun firebaseAuthWithGoogle(account: GoogleSignInAccount) {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+        Log.d("googlesignin", credential.toString())
         auth?.signInWithCredential(credential)
             ?.addOnCompleteListener {task ->
                 if (task.isSuccessful) {
                     // 다음 페이지 호출
                     moveMainPage(auth?.currentUser)
                 } else {
-                    startActivity(Intent(this, MainActivity::class.java))
+                    Toast.makeText(this, "구글 로그인 실패", Toast.LENGTH_SHORT).show()
+                    Log.e("GoogleSignIn", "Failed. ${task.exception}")
                 }
         }
     }
