@@ -25,7 +25,7 @@ class Pager2Adapter : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         demoCollectionAdapter = DemoCollectionAdapter(this)
-        viewPager = view.findViewById(R.id.viewPager2)
+        viewPager = view.findViewById(R.id.reviewViewPager)
         viewPager.adapter = demoCollectionAdapter
     }
 }

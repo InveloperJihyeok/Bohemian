@@ -19,6 +19,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -37,6 +38,10 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.google.firebase.storage.FirebaseStorage
 import com.team1.bohemian.databinding.FragmentMapBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MapFragment : BottomSheetDialogFragment(), OnMapReadyCallback {
 
@@ -161,12 +166,32 @@ class MapFragment : BottomSheetDialogFragment(), OnMapReadyCallback {
                     val address = getAddressFromLocation(location_.latitude, location_.longitude)
                     country = address?.countryName.toString()
                     city = address?.locality.toString()
+
+                    // Room Database
+                    val locationData = CurrentLocationData(0,country, city)
+                    saveLocationDataToDatabase(locationData)
+
                     Toast.makeText(requireContext(), "현재 위치는 $country $city", Toast.LENGTH_SHORT).show()
                     getReviewData()
                 } else {
                     Log.d("error", "위치 정보를 가져올 수 없음")
                 }
             }
+    }
+    private fun saveLocationDataToDatabase(locationData: CurrentLocationData) {
+        val database = Room.databaseBuilder(requireContext(), AppDatabase::class.java, "database-name")
+            .fallbackToDestructiveMigration()
+            .build()
+        // 데이터베이스에 현재 위치 정보 저장
+        GlobalScope.launch(Dispatchers.IO) {
+            database.locationDataDao().insertLocationData(locationData)
+
+            // 저장 후에 다시 데이터 가져와서 출력
+            val savedDataList = database.locationDataDao().getAllLocationData()
+            for (savedData in savedDataList) {
+                Log.d("fatal", "ID: ${savedData.id}, Country: ${savedData.country}, City: ${savedData.city}")
+            }
+        }
     }
     private fun getAddressFromLocation(latitude: Double, longitude: Double): Address? {
         val geocoder = Geocoder(requireContext())
