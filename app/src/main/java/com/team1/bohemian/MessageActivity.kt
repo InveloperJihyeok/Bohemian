@@ -116,6 +116,10 @@ class MessageActivity : AppCompatActivity() {
                         chatRoomUid = item.key
                         Log.d("ITM", "아이디: $chatRoomUid")
                         imageView.isEnabled = true
+                        val chatRoomName = chatModel.chatRoomName
+                        Log.d("ITM", "톡방: $chatRoomName")
+                        textViewTopName.text = chatRoomName
+                        Log.d("ITM", "텍뷰: ${textViewTopName.text}")
                         recyclerView?.layoutManager = LinearLayoutManager(this@MessageActivity)
                         recyclerView?.adapter = RecyclerViewAdapter()
                     }
@@ -135,7 +139,7 @@ class MessageActivity : AppCompatActivity() {
                 }
                 override fun onDataChange(snapshot: DataSnapshot) {
                     otheruser = snapshot.getValue<OtherUser>()
-                    textViewTopName.text = otheruser?.name
+//                    textViewTopName.text = otheruser?.name
                     getMessageList()
                 }
             })

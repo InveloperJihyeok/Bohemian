@@ -2,6 +2,7 @@ package com.team1.bohemian
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.location.Location
@@ -104,19 +105,34 @@ class HomeFragment: Fragment(), ChatRoomListener {
             val selectedChatroom = chatroomList[position]
             Toast.makeText(requireContext(), "Clicked on $selectedChatroom", Toast.LENGTH_SHORT).show()
 
-            val chatRoomName = selectedChatroom.chatRoomName
-            if(chatRoomName != null){
-                fetchChatroomUid(chatRoomName) {chatRoomUid ->
+            showJoinChatroomDialog(selectedChatroom)
+
+        }
+    }
+    private fun showJoinChatroomDialog(chatroom: Chatroom){
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("채팅 참여")
+
+        builder.setMessage("Yes")
+
+        builder.setPositiveButton("Yes") { _, _ ->
+            val chatRoomName = chatroom.chatRoomName
+            if (chatRoomName != null) {
+                fetchChatroomUid(chatRoomName) { chatRoomUid ->
                     val intent = Intent(requireContext(), MessageActivity::class.java)
                     intent.putExtra("chatRoomUid", chatRoomUid)
                     Log.d("ITM", "chatRoomUid: $chatRoomUid")
                     startActivity(intent)
                 }
-            }
-            else{
+            } else {
                 Log.e("ITM", "ChatRoomName is null")
             }
         }
+        builder.setNegativeButton("No") { _, _ ->
+            fragmentManager?.popBackStack()
+        }
+
+        builder.show()
     }
     private fun fetchChatroomUid(chatRoomName: String, callback: (String?)-> Unit){
         val chatroomRef = database.reference.child("chatrooms")
