@@ -2,6 +2,8 @@ package com.team1.bohemian
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Rect
@@ -19,6 +21,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -37,6 +40,10 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.google.firebase.storage.FirebaseStorage
 import com.team1.bohemian.databinding.FragmentMapBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MapFragment : BottomSheetDialogFragment(), OnMapReadyCallback {
 
@@ -161,12 +168,40 @@ class MapFragment : BottomSheetDialogFragment(), OnMapReadyCallback {
                     val address = getAddressFromLocation(location_.latitude, location_.longitude)
                     country = address?.countryName.toString()
                     city = address?.locality.toString()
+
+                    // SharedPreference
+                    val sharedPref = requireActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE)
+                    with(sharedPref.edit()){
+                        putLong("current_latitude", location_.latitude.toLong())
+                        putLong("current_longitude", location_.longitude.toLong())
+                        apply()
+                    }
+
+                    // Room Database
+                    val locationData = CurrentLocationData(0,country, city)
+                    saveLocationDataToDatabase(locationData)
+
                     Toast.makeText(requireContext(), "현재 위치는 $country $city", Toast.LENGTH_SHORT).show()
                     getReviewData()
                 } else {
                     Log.d("error", "위치 정보를 가져올 수 없음")
                 }
             }
+    }
+    private fun saveLocationDataToDatabase(locationData: CurrentLocationData) {
+        val database = Room.databaseBuilder(requireContext(), AppDatabase::class.java, "database-name")
+            .fallbackToDestructiveMigration()
+            .build()
+        // 데이터베이스에 현재 위치 정보 저장
+        GlobalScope.launch(Dispatchers.IO) {
+            database.locationDataDao().insertLocationData(locationData)
+
+            // 저장 후에 다시 데이터 가져와서 출력
+            val savedDataList = database.locationDataDao().getAllLocationData()
+            for (savedData in savedDataList) {
+                Log.d("fatal", "ID: ${savedData.id}, Country: ${savedData.country}, City: ${savedData.city}")
+            }
+        }
     }
     private fun getAddressFromLocation(latitude: Double, longitude: Double): Address? {
         val geocoder = Geocoder(requireContext())
@@ -181,19 +216,22 @@ class MapFragment : BottomSheetDialogFragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // 시작 지점을 파리로 설정
-        val paris = LatLng(48.8566, 2.3522)
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(paris))
+        val sharedPref = requireActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE)
+        val latitude = sharedPref.getLong("current_latitude", 40)
+        val longitude = sharedPref.getLong("current_longitude", 40)
+
+        val currentLocation = LatLng(latitude.toDouble(), longitude.toDouble())
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
 
         // 지도 크기 조절
         val zoomLevel = 12.0f // 원하는 줌 레벨 조절
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(paris, zoomLevel))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel))
 
         // 마커 추가
         mMap.addMarker(
             MarkerOptions()
-                .position(paris)
-                .title("Paris")
+                .position(currentLocation)
+                .title("Current Location")
         )
     }
 

@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
+    id("kotlin-kapt")
 }
 
 android {
@@ -68,4 +69,8 @@ dependencies {
     implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.google.android.material:material:1.2.0-alpha01")
+    implementation("androidx.room:room-runtime:2.3.0")
+    annotationProcessor("androidx.room:room-compiler:2.3.0")
+    kapt("androidx.room:room-compiler:2.3.0")
+    kapt("org.xerial:sqlite-jdbc:3.34.0")
 }

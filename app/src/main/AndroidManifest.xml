@@ -42,6 +42,11 @@
             android:name=".SignUpActivity"
             android:exported="true"
             android:theme="@style/Theme.Bohemian"/>
+
+        <activity
+            android:name=".ReviewDetailActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Bohemian"/>
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

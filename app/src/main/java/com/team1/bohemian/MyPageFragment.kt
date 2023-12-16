@@ -1,6 +1,8 @@
 package com.team1.bohemian
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,9 +24,9 @@ import com.team1.bohemian.databinding.FragmentSetProfileBinding
 class MyPageFragment: Fragment() {
 
     private lateinit var database: FirebaseDatabase
-    private lateinit var userRef: DatabaseReference
 
     private var binding: FragmentMyPageBinding? = null
+    private lateinit var sharedPref: SharedPreferences
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,9 +36,7 @@ class MyPageFragment: Fragment() {
         val view = binding?.root
 
         database = FirebaseDatabase.getInstance("https://bohemian-32f18-default-rtdb.asia-southeast1.firebasedatabase.app/")
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
-        userRef = database.reference.child("users").child(userId!!)
-
+        sharedPref = requireActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE)
         loadProfileData()
 
         binding?.btnLogout?.setOnClickListener {
@@ -60,25 +60,33 @@ class MyPageFragment: Fragment() {
     // 프로필 이미지 등록 필요함
 
     private fun loadProfileData() {
-        userRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    val nickname = snapshot.child("nickname").getValue<String>()
-                    val birth = snapshot.child("age").getValue<String>()
-                    val gender = snapshot.child("gender").getValue<String>()
-                    //val subscriber = snapshot.child("subscriber number).getValue<String>()
+        val nickname = sharedPref.getString("nickname", "Set your nickname!")
+        val birth = sharedPref.getString("birth","Set your birth!")
+        val gender = sharedPref.getString("gender", "Set your gender!")
 
-                    binding?.textMyNickname?.setText(nickname)
-                    binding?.textMyBirth?.text = birth
-                    binding?.textMyGender?.text = gender
-                    // binding?.textSubscriber?.text = subscriber
-                }
-            }
-            override fun onCancelled(error: DatabaseError) {
-                // 데이터 로드 실패 시 동작
-                Toast.makeText(requireContext(), "Failed to load profile data", Toast.LENGTH_SHORT).show()
-                Log.d("SetProfileFragment", "실패")
-            }
-        })
+        binding?.textMyNickname?.setText(nickname)
+        binding?.textMyBirth?.text = birth
+        binding?.textMyGender?.text = gender
+
+//        userRef.addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                if (snapshot.exists()) {
+//                    val nickname = snapshot.child("nickname").getValue<String>()
+//                    val birth = snapshot.child("age").getValue<String>()
+//                    val gender = snapshot.child("gender").getValue<String>()
+//                    //val subscriber = snapshot.child("subscriber number).getValue<String>()
+//
+//                    binding?.textMyNickname?.setText(nickname)
+//                    binding?.textMyBirth?.text = birth
+//                    binding?.textMyGender?.text = gender
+//                    // binding?.textSubscriber?.text = subscriber
+//                }
+//            }
+//            override fun onCancelled(error: DatabaseError) {
+//                // 데이터 로드 실패 시 동작
+//                Toast.makeText(requireContext(), "Failed to load profile data", Toast.LENGTH_SHORT).show()
+//                Log.d("SetProfileFragment", "실패")
+//            }
+//        })
     }
 }

@@ -24,7 +24,7 @@
         android:id="@+id/text_subscriber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="subscriber: "
+        android:text="Birth:"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/text_nickname"
         app:layout_constraintTop_toBottomOf="@+id/text_nickname" />
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:layout_marginTop="8dp"
-        android:text="user_name"
+        android:text="Nickname:"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/profile_image"
         app:layout_constraintTop_toTopOf="parent" />
@@ -44,7 +44,7 @@
         android:id="@+id/text_sentence"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="You Only Live Once!"
+        android:text="Gender:"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/text_subscriber"
         app:layout_constraintTop_toBottomOf="@+id/text_subscriber" />
@@ -163,7 +163,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="19dp"
-        android:text="nickname"
+        android:text="Set your nickname!"
         app:layout_constraintStart_toEndOf="@+id/text_nickname"
         app:layout_constraintTop_toTopOf="@+id/text_nickname" />
 
@@ -171,18 +171,16 @@
         android:id="@+id/textMyBirth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
         android:text="birth"
-        app:layout_constraintStart_toEndOf="@+id/text_subscriber"
+        app:layout_constraintStart_toStartOf="@+id/textMyNickname"
         app:layout_constraintTop_toTopOf="@+id/text_subscriber" />
 
     <TextView
         android:id="@+id/textMyGender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
         android:text="gender"
-        app:layout_constraintStart_toEndOf="@+id/text_sentence"
+        app:layout_constraintStart_toStartOf="@+id/textMyBirth"
         app:layout_constraintTop_toTopOf="@+id/text_sentence" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

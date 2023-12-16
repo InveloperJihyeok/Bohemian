@@ -121,7 +121,7 @@
         tools:layout_editor_absoluteY="396dp" />
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager2"
+        android:id="@+id/reviewViewPager"
         android:layout_width="0dp"
         android:layout_height="141dp"
         android:layout_marginStart="2dp"
@@ -142,7 +142,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewPager2">
+        app:layout_constraintTop_toBottomOf="@+id/reviewViewPager">
 
         <Button
             android:id="@+id/button8"
