@@ -55,7 +55,6 @@ class MessageActivity : AppCompatActivity() {
         val dateFormat = SimpleDateFormat("MM월dd일 hh:mm")
         val curTime = dateFormat.format(Date(time)).toString()
 
-//        chatRoomUid = database.reference.child("chatrooms")
         userId = Firebase.auth.currentUser?.uid.toString()
         recyclerView = findViewById(R.id.messageActivity_recyclerview)
 
@@ -66,7 +65,6 @@ class MessageActivity : AppCompatActivity() {
             chatRoomUid?.let{uid ->
                 chatModel.users.put(uid.toString(), true)
             }
-//            chatModel.users.put(chatRoomUid!!, true)
 
             Log.d("ITM", "click")
 
@@ -95,7 +93,7 @@ class MessageActivity : AppCompatActivity() {
                     Log.d("ITM", "nullx$chatRoomUid")
                 }
             }else{
-                // 메시지가 비어있을 때의 처리 (예: Toast 메시지 표시)
+                // 메시지가 비어있을 때 알림
                 Toast.makeText(this, "메시지를 입력하세요", Toast.LENGTH_SHORT).show()
                 Log.d("ITM", "메시지 입력 메시지 오류")
             }

@@ -15,16 +15,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
-import android.widget.Button
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
-import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -111,20 +107,14 @@ class HomeFragment: Fragment(), ChatRoomListener {
             val chatRoomName = selectedChatroom.chatRoomName
             if(chatRoomName != null){
                 fetchChatroomUid(chatRoomName) {chatRoomUid ->
-//                    if(chatRoomUid != null){
-                        val intent = Intent(requireContext(), MessageActivity::class.java)
-                        intent.putExtra("chatRoomUid", chatRoomUid)
-                        Log.d("ITM", "chatRoomUid: $chatRoomUid")
-                        startActivity(intent)
-//                    }
-//                    else {
-////                        Log.e("ITM", "Failed to fetch chatRoomUid")
-//                        Log.e("ITM", "Fail")
-//                    }
+                    val intent = Intent(requireContext(), MessageActivity::class.java)
+                    intent.putExtra("chatRoomUid", chatRoomUid)
+                    Log.d("ITM", "chatRoomUid: $chatRoomUid")
+                    startActivity(intent)
                 }
             }
             else{
-//                Log.e("ITM", "ChatRoomName is null")
+                Log.e("ITM", "ChatRoomName is null")
             }
         }
     }
@@ -155,7 +145,6 @@ class HomeFragment: Fragment(), ChatRoomListener {
             }
         })
     }
-
 
     private fun fetchChatrooms(){
         val chatroomRef = database.reference.child("chatrooms")
@@ -260,7 +249,7 @@ class HomeFragment: Fragment(), ChatRoomListener {
 
     private fun createWeatherApi(): WeatherApi{
         val retrofit = Retrofit.Builder()
-            .baseUrl(Companion.BASE_URL)
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -286,10 +275,8 @@ class HomeFragment: Fragment(), ChatRoomListener {
     }
 
     override fun addChatRoomToList(chatRoomUid: String) {
-        TODO("Not yet implemented")
     }
 
     override fun refreshChatRooms() {
-        TODO("Not yet implemented")
     }
 }
