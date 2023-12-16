@@ -17,9 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-//import com.team1.bohemian.ChatModel
 import com.team1.bohemian.ChatModel.Comment
-//import com.team1.bohemian.Friend
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
@@ -35,18 +33,19 @@ class MessageActivity : AppCompatActivity() {
 
     private val database = FirebaseDatabase.getInstance("https://bohemian-32f18-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
     private var chatRoomUid : String? = null
-    private var destinationUid : String? = null
     private var userId : String? = null
     private var recyclerView : RecyclerView? = null
     private var binding: ActivityMessageBinding ?= null
     private lateinit var imageView: ImageView
     private lateinit var textViewTopName: TextView
 
+
     @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMessageBinding.inflate(layoutInflater)
         setContentView(binding?.root)
+        val chatRoomUid = intent.getStringExtra("chatRoomUid")
         imageView = binding?.messageActivityImageView!!
         val editText = binding?.messageActivityEditText
         textViewTopName = binding?.messageActivityTextViewTopName!!
@@ -56,15 +55,18 @@ class MessageActivity : AppCompatActivity() {
         val dateFormat = SimpleDateFormat("MM월dd일 hh:mm")
         val curTime = dateFormat.format(Date(time)).toString()
 
-        destinationUid = intent.getStringExtra("destinationUid")
+//        chatRoomUid = database.reference.child("chatrooms")
         userId = Firebase.auth.currentUser?.uid.toString()
         recyclerView = findViewById(R.id.messageActivity_recyclerview)
 
         imageView.setOnClickListener {
-            Log.d("ITM", "$destinationUid")
+            Log.d("ITM", "check!$chatRoomUid")
             val chatModel = ChatModel()
             chatModel.users.put(userId.toString(), true)
-            chatModel.users.put(destinationUid!!, true)
+            chatRoomUid?.let{uid ->
+                chatModel.users.put(uid.toString(), true)
+            }
+//            chatModel.users.put(chatRoomUid!!, true)
 
             Log.d("ITM", "click")
 
@@ -77,19 +79,22 @@ class MessageActivity : AppCompatActivity() {
                         // 채팅방 생성
                         checkChatRoom()
                         // 메세지 보내기
-                        Handler().postDelayed({
-                            println(chatRoomUid)
-                            database.child("chatrooms").child(chatRoomUid.toString()).child("comments").push().setValue(comment)
-                            editText?.text = null
-                        }, 1000L)
-                        Log.d("chatUidNull dest", "$destinationUid")
+                        chatRoomUid?.let {
+                            Handler().postDelayed({
+                                database.child("chatrooms").child(it).child("comments").push()
+                                    .setValue(comment)
+                                editText?.text = null
+                            }, 1000L)
+                            Log.d("ITM", "Null $it")
+                        }
                     }
                 } else {
-                    database.child("chatrooms").child(chatRoomUid.toString()).child("comments").push().setValue(comment)
+                    database.child("chatrooms").child(chatRoomUid.toString()).child("comments")
+                        .push().setValue(comment)
                     editText?.text = null
-                    Log.d("chatUidNotNull dest", "$destinationUid")
+                    Log.d("ITM", "nullx$chatRoomUid")
                 }
-            } else {
+            }else{
                 // 메시지가 비어있을 때의 처리 (예: Toast 메시지 표시)
                 Toast.makeText(this, "메시지를 입력하세요", Toast.LENGTH_SHORT).show()
             }
@@ -98,17 +103,19 @@ class MessageActivity : AppCompatActivity() {
         checkChatRoom()
     }
 
-    private fun checkChatRoom(){
-        database.child("chatrooms").orderByChild("users/$userId").equalTo(true)
-                .addListenerForSingleValueEvent(object : ValueEventListener{
+    private fun checkChatRoom() {
+        val query = database.child("chatrooms")
+
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
             }
+
             override fun onDataChange(snapshot: DataSnapshot) {
-                for (item in snapshot.children){
-                    println(item)
+                for (item in snapshot.children) {
                     val chatModel = item.getValue<ChatModel>()
-                    if(chatModel?.users!!.containsKey(destinationUid)){
+                    if (chatModel != null && chatModel.containsUser(userId)) {
                         chatRoomUid = item.key
+                        Log.d("ITM", "아이디: $chatRoomUid")
                         imageView.isEnabled = true
                         recyclerView?.layoutManager = LinearLayoutManager(this@MessageActivity)
                         recyclerView?.adapter = RecyclerViewAdapter()
@@ -118,12 +125,13 @@ class MessageActivity : AppCompatActivity() {
         })
     }
 
+
     inner class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerViewAdapter.MessageViewHolder>() {
 
         private val comments = ArrayList<Comment>()
         private var otheruser : OtherUser? = null
         init{
-            database.child("users").child(destinationUid.toString()).addListenerForSingleValueEvent(object : ValueEventListener{
+            database.child("users").child(chatRoomUid.toString()).addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onCancelled(error: DatabaseError) {
                 }
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -169,9 +177,9 @@ class MessageActivity : AppCompatActivity() {
                 holder.layout_main.gravity = Gravity.RIGHT
             }else{ // 상대방 채팅
                 Glide.with(holder.itemView.context)
-                        .load(otheruser?.profileImageUrl)
-                        .apply(RequestOptions().circleCrop())
-                        .into(holder.imageView_profile)
+                    .load(otheruser?.profileImageUrl)
+                    .apply(RequestOptions().circleCrop())
+                    .into(holder.imageView_profile)
                 holder.textView_name.text = otheruser?.name
                 holder.layout_destination.visibility = View.VISIBLE
                 holder.textView_name.visibility = View.VISIBLE
@@ -194,3 +202,4 @@ class MessageActivity : AppCompatActivity() {
         }
     }
 }
+

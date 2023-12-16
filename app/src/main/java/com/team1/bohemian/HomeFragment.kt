@@ -24,6 +24,11 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -33,15 +38,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-class HomeFragment: Fragment() {
+class HomeFragment: Fragment(), ChatRoomListener {
 
     private lateinit var locationTextView: TextView
     private lateinit var weatherTextView: TextView
     private lateinit var locationListView: ListView
-    private val userList = arrayListOf("맛집 투어 갈 동행 구해요~", "카페 갈 사람ㄱ", "서로 인생샷 건져주실 분")    //가짜 사용자 데이터 -> 이거를 위치기반 근처 사람들 톡방으로 만들어야함
     private lateinit var geocoder: Geocoder
     private lateinit var locationManager: LocationManager
     private lateinit var apiKey: String
+    private lateinit var database: FirebaseDatabase
+    private lateinit var chatroomList: MutableList<Chatroom>
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -76,22 +82,100 @@ class HomeFragment: Fragment() {
                 LOCATION_PERMISSION_REQUEST_CODE
             )
         }
-        //가짜 사용자 데이터로 리스트뷰 구성
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, userList)
+
+        database = FirebaseDatabase.getInstance("https://bohemian-32f18-default-rtdb.asia-southeast1.firebasedatabase.app/")
+        chatroomList = mutableListOf()
+
+        fetchChatrooms()
+
+        val adapter = object : ArrayAdapter<Chatroom> (
+            requireContext(),
+            android.R.layout.simple_list_item_1,
+            chatroomList
+            ){
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View{
+                val view = super.getView(position, convertView, parent)
+                val chatroom = getItem(position)
+                val chatroomName = chatroom?.chatRoomName?:""
+                (view.findViewById(android.R.id.text1) as TextView).text = chatroomName
+                return view
+            }
+        }
         locationListView.adapter = adapter
 
         //리스트뷰 아이템 클릭 이벤트
         locationListView.setOnItemClickListener{ _, _, position, _ ->
-            val selectedUser = userList[position]
-            Toast.makeText(requireContext(), "Clicked on $selectedUser", Toast.LENGTH_SHORT).show()
+            val selectedChatroom = chatroomList[position]
+            Toast.makeText(requireContext(), "Clicked on $selectedChatroom", Toast.LENGTH_SHORT).show()
 
-            //ChatroomFragment로 이동
-            val intent = Intent(requireContext(), MessageActivity::class.java)
-            intent.putExtra("destinationUid", selectedUser)
-            startActivity(intent)
+            val chatRoomName = selectedChatroom.chatRoomName
+            if(chatRoomName != null){
+                fetchChatroomUid(chatRoomName) {chatRoomUid ->
+//                    if(chatRoomUid != null){
+                        val intent = Intent(requireContext(), MessageActivity::class.java)
+                        intent.putExtra("chatRoomUid", chatRoomUid)
+                        Log.d("ITM", "chatRoomUid: $chatRoomUid")
+                        startActivity(intent)
+//                    }
+//                    else {
+////                        Log.e("ITM", "Failed to fetch chatRoomUid")
+//                        Log.e("ITM", "Fail")
+//                    }
+                }
+            }
+            else{
+//                Log.e("ITM", "ChatRoomName is null")
+            }
         }
     }
+    private fun fetchChatroomUid(chatRoomName: String, callback: (String?)-> Unit){
+        val chatroomRef = database.reference.child("chatrooms")
+        var query = chatroomRef.orderByChild("chatRoomName").equalTo(chatRoomName)
 
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (data in snapshot.children) {
+                    val chatroom = data.getValue(Chatroom::class.java)
+                    if (chatroom != null) {
+                        val chatRoomUid = data.key
+                        if(chatRoomUid != null){
+                            Log.d("ITM", "uid: $chatRoomUid")
+                            callback(chatRoomUid)
+                            return
+                        }
+                    }
+                }
+                Log.e("ITM", "No $chatRoomName")
+                callback(null) // No matching chatroom found
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("ITM", "Failed to fetch chatroomUid: ${error.message}")
+                callback(null)
+            }
+        })
+    }
+
+
+    private fun fetchChatrooms(){
+        val chatroomRef = database.reference.child("chatrooms")
+        chatroomRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                chatroomList.clear()
+                for(data in snapshot.children){
+                    val chatroom = data.getValue(Chatroom::class.java)
+                    chatroom?.let{
+                        chatroomList.add(it)
+                    }
+                }
+                (locationListView.adapter as ArrayAdapter<*>).notifyDataSetChanged()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("ITM", "Failed to fetch")
+            }
+        })
+    }
     @SuppressLint("MissingPermission")
     private fun getLocation(){
         val locationManager =
@@ -199,5 +283,13 @@ class HomeFragment: Fragment() {
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 123
         private const val BASE_URL = "https://api.openweathermap.org/data/2.5/"
+    }
+
+    override fun addChatRoomToList(chatRoomUid: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun refreshChatRooms() {
+        TODO("Not yet implemented")
     }
 }

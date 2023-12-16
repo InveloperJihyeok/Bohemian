@@ -1,0 +1,22 @@
+<!-- res/layout/fragment_add_chatroom.xml -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editTextChatRoomName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Chat Room Name"/>
+
+    <Button
+        android:id="@+id/btnCreateChatRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Chat Room"/>
+
+</LinearLayout>

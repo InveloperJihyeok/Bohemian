@@ -4,5 +4,5 @@ data class OtherUser(
     val email : String? = null,
     val name : String? = null,
     val profileImageUrl : String? = null,
-    val userIid : String? = null)
+    val userId : String? = null)
 
