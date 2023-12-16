@@ -67,4 +67,5 @@ dependencies {
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
     implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation("com.google.android.material:material:1.2.0-alpha01")
 }

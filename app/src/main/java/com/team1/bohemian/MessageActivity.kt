@@ -32,12 +32,12 @@ import com.team1.bohemian.databinding.ActivityMessageBinding
 
 class MessageActivity : AppCompatActivity() {
 
-    private val fireDatabase = FirebaseDatabase.getInstance().reference
+    private val fireDatabase = FirebaseDatabase.getInstance("https://bohemian-32f18-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
     private var chatRoomUid : String? = null
     private var destinationUid : String? = null
     private var userId : String? = null
     private var recyclerView : RecyclerView? = null
-    private lateinit var binding: ActivityMessageBinding
+    private var binding: ActivityMessageBinding ?= null
     private lateinit var imageView: ImageView
     private lateinit var textViewTopName: TextView
 
@@ -45,11 +45,10 @@ class MessageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMessageBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        setContentView(R.layout.activity_message)
-        val imageView = binding.messageActivityImageView
-        val editText = binding.messageActivityEditText
-        textViewTopName = binding.messageActivityTextViewTopName
+        setContentView(binding?.root)
+        imageView = binding?.messageActivityImageView!!
+        val editText = binding?.messageActivityEditText
+        textViewTopName = binding?.messageActivityTextViewTopName!!
 
         //메세지를 보낸 시간
         val time = System.currentTimeMillis()
@@ -60,13 +59,13 @@ class MessageActivity : AppCompatActivity() {
         userId = Firebase.auth.currentUser?.uid.toString()
         recyclerView = findViewById(R.id.messageActivity_recyclerview)
 
-        imageView.setOnClickListener {
+        imageView?.setOnClickListener {
             Log.d("클릭 시 dest", "$destinationUid")
             val chatModel = ChatModel()
             chatModel.users.put(userId.toString(), true)
             chatModel.users.put(destinationUid!!, true)
 
-            val comment = Comment(userId, editText.text.toString(), curTime)
+            val comment = Comment(userId, editText?.text.toString(), curTime)
             if(chatRoomUid == null){
                 imageView.isEnabled = false
                 fireDatabase.child("chatrooms").push().setValue(chatModel).addOnSuccessListener {
@@ -76,13 +75,17 @@ class MessageActivity : AppCompatActivity() {
                     Handler().postDelayed({
                         println(chatRoomUid)
                         fireDatabase.child("chatrooms").child(chatRoomUid.toString()).child("comments").push().setValue(comment)
-                        editText.text = null
+                        if (editText != null) {
+                            editText.text = null
+                        }
                     }, 1000L)
                     Log.d("chatUidNull dest", "$destinationUid")
                 }
             }else{
                 fireDatabase.child("chatrooms").child(chatRoomUid.toString()).child("comments").push().setValue(comment)
-                editText.text = null
+                if (editText != null) {
+                    editText.text = null
+                }
                 Log.d("chatUidNotNull dest", "$destinationUid")
             }
         }

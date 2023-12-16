@@ -10,16 +10,14 @@
         android:layout_width="85dp"
         android:layout_height="85dp"
         android:layout_margin="7.5dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
         android:src="@mipmap/ic_launcher"
         app:civ_border_color="#2196F3"
         app:civ_border_overlay="true"
         app:civ_border_width="5.5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myPage"
-        app:layout_constraintVertical_bias="0.06"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingClass" />
 
     <TextView
@@ -28,39 +26,19 @@
         android:layout_height="wrap_content"
         android:text="subscriber: "
         android:textSize="16sp"
-        tools:layout_editor_absoluteX="168dp"
-        tools:layout_editor_absoluteY="121dp" />
-
-    <TextView
-        android:id="@+id/myPage"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#3365E4"
-        android:fontFamily="sans-serif"
-        android:text="My Page"
-        android:textAlignment="center"
-        android:textColor="@android:color/white"
-        android:textSize="32sp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="2dp" />
+        app:layout_constraintStart_toStartOf="@+id/text_nickname"
+        app:layout_constraintTop_toBottomOf="@+id/text_nickname" />
 
     <TextView
         android:id="@+id/text_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="8dp"
         android:text="user_name"
         android:textSize="16sp"
-        tools:layout_editor_absoluteX="166dp"
-        tools:layout_editor_absoluteY="88dp" />
-
-    <TextView
-        android:id="@+id/text_nickname3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="user_name"
-        android:textSize="16sp"
-        tools:layout_editor_absoluteX="166dp"
-        tools:layout_editor_absoluteY="88dp" />
+        app:layout_constraintStart_toEndOf="@+id/profile_image"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_sentence"
@@ -68,26 +46,27 @@
         android:layout_height="wrap_content"
         android:text="You Only Live Once!"
         android:textSize="16sp"
-        tools:layout_editor_absoluteX="168dp"
-        tools:layout_editor_absoluteY="152dp" />
+        app:layout_constraintStart_toStartOf="@+id/text_subscriber"
+        app:layout_constraintTop_toBottomOf="@+id/text_subscriber" />
 
     <Button
         android:id="@+id/btn_setProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="484dp"
+        android:layout_marginTop="20dp"
         android:text="Modify my information"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="411dp"
         android:layout_height="173dp"
+        android:layout_marginTop="10dp"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="257dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_setProfile">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -96,8 +75,8 @@
 
             <TextView
                 android:id="@+id/textView3"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:layout_weight="0"
@@ -123,11 +102,12 @@
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:layout_weight="1"
+                android:gravity="center|start"
                 android:text="Saved Reviews" />
 
             <ImageButton
@@ -146,12 +126,14 @@
 
             <TextView
                 android:id="@+id/textView6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:layout_weight="1"
-                android:text="Posted Reviews" />
+                android:gravity="start|center_vertical"
+                android:text="Posted Reviews"
+                android:textStyle="normal" />
 
             <ImageButton
                 android:id="@+id/imageButton5"
@@ -180,24 +162,27 @@
         android:id="@+id/textMyNickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="19dp"
         android:text="nickname"
-        tools:layout_editor_absoluteX="263dp"
-        tools:layout_editor_absoluteY="88dp" />
+        app:layout_constraintStart_toEndOf="@+id/text_nickname"
+        app:layout_constraintTop_toTopOf="@+id/text_nickname" />
 
     <TextView
         android:id="@+id/textMyBirth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="22dp"
         android:text="birth"
-        tools:layout_editor_absoluteX="273dp"
-        tools:layout_editor_absoluteY="124dp" />
+        app:layout_constraintStart_toEndOf="@+id/text_subscriber"
+        app:layout_constraintTop_toTopOf="@+id/text_subscriber" />
 
     <TextView
         android:id="@+id/textMyGender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
         android:text="gender"
-        tools:layout_editor_absoluteX="320dp"
-        tools:layout_editor_absoluteY="150dp" />
+        app:layout_constraintStart_toEndOf="@+id/text_sentence"
+        app:layout_constraintTop_toTopOf="@+id/text_sentence" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
