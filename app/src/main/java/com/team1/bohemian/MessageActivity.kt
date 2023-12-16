@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +33,7 @@ import com.team1.bohemian.databinding.ActivityMessageBinding
 
 class MessageActivity : AppCompatActivity() {
 
-    private val fireDatabase = FirebaseDatabase.getInstance("https://bohemian-32f18-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
+    private val database = FirebaseDatabase.getInstance("https://bohemian-32f18-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
     private var chatRoomUid : String? = null
     private var destinationUid : String? = null
     private var userId : String? = null
@@ -59,41 +60,46 @@ class MessageActivity : AppCompatActivity() {
         userId = Firebase.auth.currentUser?.uid.toString()
         recyclerView = findViewById(R.id.messageActivity_recyclerview)
 
-        imageView?.setOnClickListener {
-            Log.d("클릭 시 dest", "$destinationUid")
+        imageView.setOnClickListener {
+            Log.d("ITM", "$destinationUid")
             val chatModel = ChatModel()
             chatModel.users.put(userId.toString(), true)
             chatModel.users.put(destinationUid!!, true)
 
-            val comment = Comment(userId, editText?.text.toString(), curTime)
-            if(chatRoomUid == null){
-                imageView.isEnabled = false
-                fireDatabase.child("chatrooms").push().setValue(chatModel).addOnSuccessListener {
-                    //채팅방 생성
-                    checkChatRoom()
-                    //메세지 보내기
-                    Handler().postDelayed({
-                        println(chatRoomUid)
-                        fireDatabase.child("chatrooms").child(chatRoomUid.toString()).child("comments").push().setValue(comment)
-                        if (editText != null) {
-                            editText.text = null
-                        }
-                    }, 1000L)
-                    Log.d("chatUidNull dest", "$destinationUid")
+            Log.d("ITM", "click")
+
+            val messageText = editText?.text.toString().trim() // 입력된 텍스트에서 공백을 제거하고 가져옴
+            if (messageText.isNotEmpty()) { // 메시지가 비어있지 않은 경우에만 전송
+                val comment = Comment(userId, messageText, curTime)
+                if (chatRoomUid == null) {
+                    imageView.isEnabled = false
+                    database.child("chatrooms").push().setValue(chatModel).addOnSuccessListener {
+                        // 채팅방 생성
+                        checkChatRoom()
+                        // 메세지 보내기
+                        Handler().postDelayed({
+                            println(chatRoomUid)
+                            database.child("chatrooms").child(chatRoomUid.toString()).child("comments").push().setValue(comment)
+                            editText?.text = null
+                        }, 1000L)
+                        Log.d("chatUidNull dest", "$destinationUid")
+                    }
+                } else {
+                    database.child("chatrooms").child(chatRoomUid.toString()).child("comments").push().setValue(comment)
+                    editText?.text = null
+                    Log.d("chatUidNotNull dest", "$destinationUid")
                 }
-            }else{
-                fireDatabase.child("chatrooms").child(chatRoomUid.toString()).child("comments").push().setValue(comment)
-                if (editText != null) {
-                    editText.text = null
-                }
-                Log.d("chatUidNotNull dest", "$destinationUid")
+            } else {
+                // 메시지가 비어있을 때의 처리 (예: Toast 메시지 표시)
+                Toast.makeText(this, "메시지를 입력하세요", Toast.LENGTH_SHORT).show()
             }
         }
+
         checkChatRoom()
     }
 
     private fun checkChatRoom(){
-        fireDatabase.child("chatrooms").orderByChild("users/$userId").equalTo(true)
+        database.child("chatrooms").orderByChild("users/$userId").equalTo(true)
                 .addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onCancelled(error: DatabaseError) {
             }
@@ -117,7 +123,7 @@ class MessageActivity : AppCompatActivity() {
         private val comments = ArrayList<Comment>()
         private var otheruser : OtherUser? = null
         init{
-            fireDatabase.child("users").child(destinationUid.toString()).addListenerForSingleValueEvent(object : ValueEventListener{
+            database.child("users").child(destinationUid.toString()).addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onCancelled(error: DatabaseError) {
                 }
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -129,7 +135,7 @@ class MessageActivity : AppCompatActivity() {
         }
 
         fun getMessageList(){
-            fireDatabase.child("chatrooms").child(chatRoomUid.toString()).child("comments").addValueEventListener(object : ValueEventListener{
+            database.child("chatrooms").child(chatRoomUid.toString()).child("comments").addValueEventListener(object : ValueEventListener{
                 override fun onCancelled(error: DatabaseError) {
                 }
                 override fun onDataChange(snapshot: DataSnapshot) {
