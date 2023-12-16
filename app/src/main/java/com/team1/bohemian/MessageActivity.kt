@@ -77,7 +77,7 @@ class MessageActivity : AppCompatActivity() {
                     imageView.isEnabled = false
                     database.child("chatrooms").push().setValue(chatModel).addOnSuccessListener {
                         // 채팅방 생성
-                        checkChatRoom()
+                        checkChatRoom(chatRoomUid)
                         // 메세지 보내기
                         chatRoomUid?.let {
                             Handler().postDelayed({
@@ -97,13 +97,14 @@ class MessageActivity : AppCompatActivity() {
             }else{
                 // 메시지가 비어있을 때의 처리 (예: Toast 메시지 표시)
                 Toast.makeText(this, "메시지를 입력하세요", Toast.LENGTH_SHORT).show()
+                Log.d("ITM", "메시지 입력 메시지 오류")
             }
         }
 
-        checkChatRoom()
+        checkChatRoom(chatRoomUid)
     }
 
-    private fun checkChatRoom() {
+    private fun checkChatRoom(chatRoomUidFromFragment:String?) {
         val query = database.child("chatrooms")
 
         query.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -113,7 +114,7 @@ class MessageActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (item in snapshot.children) {
                     val chatModel = item.getValue<ChatModel>()
-                    if (chatModel != null && chatModel.containsUser(userId)) {
+                    if (chatModel != null && chatModel.containsUser(userId) && item.key == chatRoomUidFromFragment) {
                         chatRoomUid = item.key
                         Log.d("ITM", "아이디: $chatRoomUid")
                         imageView.isEnabled = true
@@ -143,21 +144,27 @@ class MessageActivity : AppCompatActivity() {
         }
 
         fun getMessageList(){
-            database.child("chatrooms").child(chatRoomUid.toString()).child("comments").addValueEventListener(object : ValueEventListener{
-                override fun onCancelled(error: DatabaseError) {
-                }
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    comments.clear()
-                    for(data in snapshot.children){
-                        val item = data.getValue<Comment>()
-                        comments.add(item!!)
-                        println(comments)
+            chatRoomUid?.let{ uid ->
+                database.child("chatrooms").child(chatRoomUid.toString()).child("comments").addValueEventListener(object : ValueEventListener{
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.e("ITM", "$error")
                     }
-                    notifyDataSetChanged()
-                    //메세지를 보낼 시 화면을 맨 밑으로 내림
-                    recyclerView?.scrollToPosition(comments.size - 1)
-                }
-            })
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        comments.clear()
+                        for(data in snapshot.children){
+                            val item = data.getValue<Comment>()
+                            comments.add(item!!)
+                            println(comments)
+                        }
+                        Log.d("ITM", "Message size ${comments.size}")
+                        notifyDataSetChanged()
+                        //메세지를 보낼 시 화면을 맨 밑으로 내림
+                        recyclerView?.scrollToPosition(comments.size - 1)
+                    }
+                })
+
+            }
+
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {

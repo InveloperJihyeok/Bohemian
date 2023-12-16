@@ -10,14 +10,6 @@ class ChatModel (val users: HashMap<String, Boolean> = HashMap(),
                   val message: String? = null,
                   val time: String? = null)
 
-    fun addUser(userId: String){
-        users[userId] = true
-    }
-
-    fun addComment(commentId: String, comment: Comment) {
-        comments[commentId] = comment
-    }
-
     fun containsUser(userId: String?): Boolean {
         return users.containsKey(userId) && users[userId] == true
     }
