@@ -2,6 +2,8 @@ package com.team1.bohemian
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Rect
@@ -167,6 +169,14 @@ class MapFragment : BottomSheetDialogFragment(), OnMapReadyCallback {
                     country = address?.countryName.toString()
                     city = address?.locality.toString()
 
+                    // SharedPreference
+                    val sharedPref = requireActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE)
+                    with(sharedPref.edit()){
+                        putLong("current_latitude", location_.latitude.toLong())
+                        putLong("current_longitude", location_.longitude.toLong())
+                        apply()
+                    }
+
                     // Room Database
                     val locationData = CurrentLocationData(0,country, city)
                     saveLocationDataToDatabase(locationData)
@@ -206,19 +216,22 @@ class MapFragment : BottomSheetDialogFragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // 시작 지점을 파리로 설정
-        val paris = LatLng(48.8566, 2.3522)
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(paris))
+        val sharedPref = requireActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE)
+        val latitude = sharedPref.getLong("current_latitude", 40)
+        val longitude = sharedPref.getLong("current_longitude", 40)
+
+        val currentLocation = LatLng(latitude.toDouble(), longitude.toDouble())
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
 
         // 지도 크기 조절
         val zoomLevel = 12.0f // 원하는 줌 레벨 조절
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(paris, zoomLevel))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel))
 
         // 마커 추가
         mMap.addMarker(
             MarkerOptions()
-                .position(paris)
-                .title("Paris")
+                .position(currentLocation)
+                .title("Current Location")
         )
     }
 

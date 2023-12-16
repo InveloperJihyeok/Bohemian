@@ -14,7 +14,6 @@ data class MapItemData(
 data class ReviewData(
     val id: String?,
     val uid: String?,
-    val nickname:String?,
     var title: String?,
     var contents: String?,
     var tags: MutableList<String>?,

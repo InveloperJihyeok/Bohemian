@@ -111,7 +111,6 @@ class ReviewAddFragment: Fragment() {
                 val reviewsByIdRef = database.reference.child("reviewsById").child(reviewCode)
                 reviewsByIdRef.child("id").setValue(reviewCode)
                 reviewsByIdRef.child("uid").setValue(userId)
-                reviewsByIdRef.child("nickname").setValue(sharedPref.getString("nickname","Null"))
                 reviewsByIdRef.child("title").setValue(title)
                 reviewsByIdRef.child("content").setValue(content)
                 reviewsByIdRef.child("tags").setValue(tags)

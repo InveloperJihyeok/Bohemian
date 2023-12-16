@@ -1,6 +1,8 @@
 package com.team1.bohemian
 
 import android.content.ClipData
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -27,7 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ReviewsFragment: Fragment() {
+class ReviewsFragment: Fragment(){
 
     private lateinit var city: String
     private lateinit var country: String
@@ -37,6 +39,13 @@ class ReviewsFragment: Fragment() {
     private val storageReference = FirebaseStorage.getInstance("gs://bohemian-32f18.appspot.com").reference
     private var realTimeDatabase: FirebaseDatabase = FirebaseDatabase.getInstance(
         "https://bohemian-32f18-default-rtdb.asia-southeast1.firebasedatabase.app/")
+
+    private var dataPassListener: ReviewDetailListener ?= null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        dataPassListener = context as? ReviewDetailListener
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -113,11 +122,10 @@ class ReviewsFragment: Fragment() {
                     if (snapshot.exists()) {
                         val id = snapshot.child("id").getValue(String::class.java)
                         val uid = snapshot.child("uid").getValue(String::class.java)
-                        val nickname = snapshot.child("nickname").getValue(String::class.java)
                         val title = snapshot.child("title").getValue(String::class.java)
                         val tagsList = snapshot.child("tags").children.map { it.value as String }.toMutableList()
 
-                        val reviewData = ReviewData(id,uid,nickname,title,"",tagsList)
+                        val reviewData = ReviewData(id,uid,title,"",tagsList)
                         addItem(reviewData)
                     } else {
                         Log.e("Review", "Data is not exist")

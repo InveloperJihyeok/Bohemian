@@ -3,11 +3,14 @@ package com.team1.bohemian
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
 import android.media.Image
 import android.net.Uri
+import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
@@ -20,14 +23,28 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.getValue
 import com.google.firebase.storage.FirebaseStorage
 
 class ReviewAdapter(private var itemList: MutableList<ReviewData>, private val reviewsFragment: ReviewsFragment) : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
-
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val userText: TextView = itemView.findViewById(R.id.user_name)
+        val titleText: TextView = itemView.findViewById(R.id.textView_title)
+        val tagsContainer: LinearLayout = itemView.findViewById(R.id.reviewTagsContainer)
+        val imageContainer: LinearLayout = itemView.findViewById(R.id.reviewImageContainer)
+        val followButton: Button = itemView.findViewById(R.id.btn_follow)
+        val detailButton: Button = itemView.findViewById(R.id.btn_showDetails)
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.review_detail, parent, false)
         return ViewHolder(view)
@@ -36,7 +53,17 @@ class ReviewAdapter(private var itemList: MutableList<ReviewData>, private val r
     @SuppressLint("ResourceType")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemList[position]
-        holder.userText.text = item.nickname
+        val userRef = FirebaseDatabase.getInstance("https://bohemian-32f18-default-rtdb.asia-southeast1.firebasedatabase.app/").reference.child("users").child(item.uid!!)
+        userRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    val nickname = snapshot.child("nickname").getValue<String>()
+                    holder.userText.text = nickname
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
         holder.titleText.text = item.title
         // 리뷰 태그 추가
         holder.tagsContainer.removeAllViews() // 기존에 추가된 뷰를 모두 제거
@@ -90,6 +117,11 @@ class ReviewAdapter(private var itemList: MutableList<ReviewData>, private val r
                 }
             }
         }
+        holder.detailButton.setOnClickListener {
+            val intent = Intent(holder.detailButton.context, ReviewDetailActivity::class.java)
+            intent.putExtra("reviewId", item.id)
+            holder.detailButton.context.startActivity(intent)
+        }
     }
     private fun showPopupWindow(context: Context, imageUrl: Uri) {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -127,12 +159,4 @@ class ReviewAdapter(private var itemList: MutableList<ReviewData>, private val r
         return itemList.size
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val userText: TextView = itemView.findViewById(R.id.user_name)
-        val titleText: TextView = itemView.findViewById(R.id.textView_title)
-        val tagsContainer: LinearLayout = itemView.findViewById(R.id.reviewTagsContainer)
-        val imageContainer: LinearLayout = itemView.findViewById(R.id.reviewImageContainer)
-        val followButton: Button = itemView.findViewById(R.id.btn_follow)
-        val detailButton: Button = itemView.findViewById(R.id.btn_showDetails)
-    }
 }
