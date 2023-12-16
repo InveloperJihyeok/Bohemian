@@ -111,9 +111,7 @@ class HomeFragment: Fragment(), ChatRoomListener {
     }
     private fun showJoinChatroomDialog(chatroom: Chatroom){
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("채팅 참여")
-
-        builder.setMessage("Yes")
+        builder.setTitle("Participate the Chatting?")
 
         builder.setPositiveButton("Yes") { _, _ ->
             val chatRoomName = chatroom.chatRoomName
