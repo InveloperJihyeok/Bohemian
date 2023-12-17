@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:id="@+id/addReviewLayout">
+            android:id="@+id/addStoryLayout">
             <EditText
                 android:id="@+id/editText_reviewTag"
                 style="@style/Widget.AppCompat.EditText"
@@ -37,8 +37,8 @@
                 android:layout_marginTop="15dp"
                 android:text="Tag:"
                 android:textSize="16dp"
-                app:layout_constraintStart_toStartOf="@+id/editText_reviewContent"
-                app:layout_constraintTop_toBottomOf="@+id/editText_reviewContent" />
+                app:layout_constraintStart_toStartOf="@+id/textStoryComment"
+                app:layout_constraintTop_toBottomOf="@+id/textStoryComment" />
 
             <TextView
                 android:id="@+id/textView_reviewPicture"
@@ -47,17 +47,17 @@
                 android:layout_marginTop="15dp"
                 android:text="Pictures:"
                 android:textSize="16dp"
-                app:layout_constraintStart_toStartOf="@+id/editText_reviewContent"
+                app:layout_constraintStart_toStartOf="@+id/textStoryComment"
                 app:layout_constraintTop_toBottomOf="@+id/editText_reviewTag" />
 
             <TextView
-                android:id="@+id/textView_reviewPicture3"
+                android:id="@+id/textView_storyPicture3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="Pictures:"
                 android:textSize="16dp"
-                app:layout_constraintStart_toStartOf="@+id/editText_reviewContent"
+                app:layout_constraintStart_toStartOf="@+id/textStoryComment"
                 app:layout_constraintTop_toBottomOf="@+id/editText_reviewTag" />
 
             <TextView
@@ -71,7 +71,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/scrollView_reviewPictures" />
 
             <TextView
-                android:id="@+id/textView_reviewTitle"
+                android:id="@+id/text_storyAdd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
@@ -82,13 +82,13 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView_reviewContent"
+                android:id="@+id/text_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="Content:"
                 android:textSize="16dp"
-                app:layout_constraintStart_toStartOf="@+id/textView_reviewTitle"
+                app:layout_constraintStart_toStartOf="@+id/text_storyAdd"
                 app:layout_constraintTop_toBottomOf="@+id/editText_reviewTitle" />
 
             <EditText
@@ -104,11 +104,11 @@
                 android:paddingStart="10dp"
                 android:textSize="18dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView_reviewTitle"
-                app:layout_constraintTop_toBottomOf="@+id/textView_reviewTitle" />
+                app:layout_constraintStart_toStartOf="@+id/text_storyAdd"
+                app:layout_constraintTop_toBottomOf="@+id/text_storyAdd" />
 
             <EditText
-                android:id="@+id/editText_reviewContent"
+                android:id="@+id/textStoryComment"
                 android:layout_width="0dp"
                 android:layout_height="200dp"
                 android:layout_marginTop="8dp"
@@ -122,8 +122,8 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView_reviewTitle"
-                app:layout_constraintTop_toBottomOf="@+id/textView_reviewContent" />
+                app:layout_constraintStart_toStartOf="@+id/text_storyAdd"
+                app:layout_constraintTop_toBottomOf="@+id/text_comment" />
 
             <Button
                 android:id="@+id/btn_addTag"
@@ -133,7 +133,7 @@
                 android:insetBottom="0dp"
                 android:text="Add"
                 android:textSize="16dp"
-                app:layout_constraintEnd_toEndOf="@+id/editText_reviewContent"
+                app:layout_constraintEnd_toEndOf="@+id/textStoryComment"
                 app:layout_constraintTop_toTopOf="@+id/editText_reviewTag" />
 
             <ScrollView
@@ -149,7 +149,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:id="@+id/reviewImageContainer">
+                    android:id="@+id/addStoryImageContainer">
 
                     <ImageView
                         android:id="@+id/addImage"
@@ -212,7 +212,7 @@
                 android:layout_height="0dp"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="@+id/textView_reviewTag"
-                app:layout_constraintEnd_toEndOf="@+id/editText_reviewContent"
+                app:layout_constraintEnd_toEndOf="@+id/textStoryComment"
                 app:layout_constraintStart_toEndOf="@+id/textView_reviewTag"
                 app:layout_constraintTop_toTopOf="@+id/textView_reviewTag"
                 app:layout_constraintVertical_bias="0.476"></LinearLayout>

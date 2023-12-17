@@ -1,17 +1,11 @@
 package com.team1.bohemian
 
 import android.annotation.SuppressLint
-import android.content.ClipData
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.res.Resources
-import android.graphics.Color
 import android.graphics.Typeface
-import android.media.Image
 import android.net.Uri
-import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -23,11 +17,8 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -41,7 +32,7 @@ class ReviewAdapter(private var itemList: MutableList<ReviewData>, private val r
         val userText: TextView = itemView.findViewById(R.id.user_name)
         val titleText: TextView = itemView.findViewById(R.id.textView_title)
         val tagsContainer: LinearLayout = itemView.findViewById(R.id.reviewTagsContainer)
-        val imageContainer: LinearLayout = itemView.findViewById(R.id.reviewImageContainer)
+        val imageContainer: LinearLayout = itemView.findViewById(R.id.addStoryImageContainer)
         val followButton: Button = itemView.findViewById(R.id.btn_follow)
         val detailButton: Button = itemView.findViewById(R.id.btn_showDetails)
     }

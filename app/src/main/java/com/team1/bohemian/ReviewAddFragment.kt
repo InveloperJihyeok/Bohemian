@@ -21,22 +21,15 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.room.Room
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.getValue
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.w3c.dom.Text
 import kotlin.random.Random
 
 class ReviewAddFragment: Fragment() {
@@ -62,7 +55,7 @@ class ReviewAddFragment: Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_review_add, container, false)
 
-        imageContainer = view.findViewById(R.id.reviewImageContainer)
+        imageContainer = view.findViewById(R.id.addStoryImageContainer)
         tagLayout = view.findViewById(R.id.tagLinearLayout)
 
         sharedPref = requireActivity().getSharedPreferences("userInfo",Context.MODE_PRIVATE)
@@ -103,7 +96,7 @@ class ReviewAddFragment: Fragment() {
 
             // 입력된 리뷰 정보 변수로 정의
             val title = view.findViewById<EditText>(R.id.editText_reviewTitle).text.toString()
-            val content = view.findViewById<EditText>(R.id.editText_reviewContent).text.toString()
+            val content = view.findViewById<EditText>(R.id.textStoryComment).text.toString()
             val tags = tagList
 
             if (title.isNotEmpty() && content.isNotEmpty() && tags.isNotEmpty()){

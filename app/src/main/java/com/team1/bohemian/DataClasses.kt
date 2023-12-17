@@ -26,3 +26,4 @@ data class CurrentLocationData(
     val country: String,
     val city: String
 )
+
