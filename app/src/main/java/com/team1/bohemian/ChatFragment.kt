@@ -1,8 +1,9 @@
 package com.team1.bohemian
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +22,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import java.lang.ClassCastException
 import java.util.*
 import java.util.Collections.reverseOrder
 import kotlin.collections.ArrayList
@@ -30,8 +30,6 @@ class ChatFragment : Fragment(), ChatRoomListener{
 
     private val fireDatabase = FirebaseDatabase.getInstance("https://bohemian-32f18-default-rtdb.asia-southeast1.firebasedatabase.app/").reference
 
-    //뷰가 생성되었을 때
-    //프레그먼트와 레이아웃을 연결시켜주는 부분
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -78,16 +76,27 @@ class ChatFragment : Fragment(), ChatRoomListener{
 
         init {
             userId = Firebase.auth.currentUser?.uid.toString()
-            println(userId)
-
-            fireDatabase.child("chatrooms").orderByChild("users/$userId").equalTo(true).addListenerForSingleValueEvent(object : ValueEventListener{
+            Log.d("ITM", "id:$userId")
+            fireDatabase.child("chatrooms").addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onCancelled(error: DatabaseError) {
                 }
                 override fun onDataChange(snapshot: DataSnapshot) {
                     chatModel.clear()
                     for(data in snapshot.children){
-                        chatModel.add(data.getValue<ChatModel>()!!)
-                        println(data)
+                        val chatModelItem = data.getValue<ChatModel>()
+                        chatModelItem?.let {
+                            if(it.users.containsKey(userId)){
+                                chatModel.add(it)
+                                Log.d("ITM", "chatModel:$chatModel")
+                                Log.d("ChatFragment", "ChatRoomName: ${it.chatRoomName}")
+
+                                val chatRoomUid = data.key
+
+                                if (chatRoomUid != null) {
+                                    destinationUsers.add(chatRoomUid)
+                                }
+                            }
+                        }
                     }
                     notifyDataSetChanged()
                 }
@@ -104,16 +113,20 @@ class ChatFragment : Fragment(), ChatRoomListener{
             val textView_lastMessage : TextView = itemView.findViewById(R.id.chat_item_textview_lastmessage)
         }
 
-        override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
-            var destinationUid: String? = null
+        override fun onBindViewHolder(holder: CustomViewHolder, @SuppressLint("RecyclerView") position: Int) {
             //채팅방에 있는 유저 모두 체크
-            for (user in chatModel[position].users.keys) {
-                if (!user.equals(userId)) {
-                    destinationUid = user
-                    destinationUsers.add(destinationUid)
-                }
+            val users = chatModel[position].users.keys.toList()
+            val otherUser = users.firstOrNull{it != userId}
+
+            var chatRoomUid: String? = null
+
+            if (otherUser != null) {
+                destinationUsers.add(otherUser)
+                chatRoomUid = otherUser
+                Log.d("ITM", "Des: $destinationUsers")
             }
-            fireDatabase.child("users").child("$destinationUid").addListenerForSingleValueEvent(object : ValueEventListener {
+
+            fireDatabase.child("users").child("$chatRoomUid").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                 }
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -122,6 +135,7 @@ class ChatFragment : Fragment(), ChatRoomListener{
                         .apply(RequestOptions().circleCrop())
                         .into(holder.imageView)
                     holder.textView_title.text = friend?.name
+                    holder.textView_title.text = "${chatModel[position].chatRoomName}"
                 }
             })
             //메세지 내림차순 정렬 후 마지막 메세지의 키값을 가져옴
@@ -142,9 +156,13 @@ class ChatFragment : Fragment(), ChatRoomListener{
 
             //채팅창 선책 시 이동
             holder.itemView.setOnClickListener {
-                val intent = Intent(context, MessageActivity::class.java)
-                intent.putExtra("destinationUid", destinationUsers[position])
-                context?.startActivity(intent)
+                Log.d("ITM", "click")
+                Log.d("ITM", "$chatRoomUid")
+                if(position < destinationUsers.size){
+                    val intent = Intent(context, MessageActivity::class.java)
+                    intent.putExtra("chatRoomUid", destinationUsers[position])
+                    context?.startActivity(intent)
+                }
             }
         }
         override fun getItemCount(): Int {
