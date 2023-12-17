@@ -192,25 +192,37 @@ class HomeFragment: Fragment(), ChatRoomListener {
             }
         })
     }
-    fun getImageUri(country: String, city: String, storyList: MutableMap<String, Map<String, String>>, callback: (MutableMap<String, MutableList<Uri>>) -> Unit) {
+    fun getImageUri(
+        country: String,
+        city: String,
+        storyList: MutableMap<String, Map<String, String>>,
+        callback: (MutableMap<String, MutableList<Uri>>) -> Unit
+    ) {
         // 이미지 Uri 가져오기
         storageRef = FirebaseStorage.getInstance("gs://bohemian-32f18.appspot.com").reference.child("story").child(country).child(city)
         val storyImageList = mutableMapOf<String, MutableList<Uri>>()
-        for (storyId in storyList.keys){
+
+        // 각 storyId에 대해 이미지 리스트를 비어 있는 MutableList로 초기화
+        for (storyId in storyList.keys) {
+            storyImageList[storyId] = mutableListOf()
+        }
+
+        // 각 storyId에 대한 이미지 리스트를 추가
+        for (storyId in storyList.keys) {
             storageRef.child(storyId).listAll().addOnSuccessListener { result ->
                 val downloadTasks = mutableListOf<Task<Uri>>()
-                for (item in result.items) {
-                    val mutableList = mutableListOf<Uri>()
 
+                for (item in result.items) {
                     // 이미지 파일에 대한 다운로드 URL 얻기
                     val downloadTask = item.downloadUrl.addOnSuccessListener { uri ->
-                        mutableList.add(uri)
+                        storyImageList[storyId]?.add(uri)
                     }
                     downloadTasks.add(downloadTask)
-                    storyImageList[storyId] = mutableList
                 }
+
                 // 모든 다운로드 작업이 완료된 후에 콜백 호출
                 Tasks.whenAllSuccess<Uri>(*downloadTasks.toTypedArray()).addOnSuccessListener {
+                    // 모든 이미지 리스트가 추가된 storyImageList를 콜백으로 전달
                     callback(storyImageList)
                 }
             }
@@ -340,13 +352,6 @@ class HomeFragment: Fragment(), ChatRoomListener {
             minDistance,
             locationListener
         )
-        getStoryId("대한민국", "null"){ storyList ->
-            Log.d("fatal", "getStoryId: ${storyList.toString()}")
-            getImageUri("대한민국", "null", storyList){ storyImageList ->
-                Log.d("fatal", "getImageUri: ${storyImageList.toString()}")
-                addStoryView(storyList, storyImageList)
-            }
-        }
     }
 
     private val locationListener = object : LocationListener{
@@ -357,6 +362,13 @@ class HomeFragment: Fragment(), ChatRoomListener {
 
             GlobalScope.launch(Dispatchers.Main){
                 getWeatherInfo(location.latitude, location.longitude)
+                getStoryId(country_, city_){ storyList ->
+                    Log.d("fatal", "getStoryId: ${storyList.toString()}")
+                    getImageUri(country_, city_, storyList){ storyImageList ->
+                        Log.d("fatal", "getImageUri: ${storyImageList.toString()}")
+                        addStoryView(storyList, storyImageList)
+                    }
+                }
             }
         }
         override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?){

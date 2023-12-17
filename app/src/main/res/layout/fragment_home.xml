@@ -91,9 +91,10 @@
 
         <LinearLayout
             android:id="@+id/storyImageContainer"
+            android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical" />
+            android:orientation="horizontal" />
     </HorizontalScrollView>
 
     <Button

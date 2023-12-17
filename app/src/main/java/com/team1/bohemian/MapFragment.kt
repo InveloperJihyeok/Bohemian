@@ -44,6 +44,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Locale
 
 class MapFragment : BottomSheetDialogFragment(), OnMapReadyCallback {
 
@@ -55,6 +56,7 @@ class MapFragment : BottomSheetDialogFragment(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     var mapView: FragmentContainerView? = null
+    private lateinit var geocoder: Geocoder
 
     private var binding: FragmentMapBinding? = null
 
@@ -74,6 +76,8 @@ class MapFragment : BottomSheetDialogFragment(), OnMapReadyCallback {
     ): View? {
         binding = FragmentMapBinding.inflate(layoutInflater)
         val view = binding?.root
+
+        geocoder = Geocoder(requireContext(), Locale.getDefault())
 
         // 구글 지도 표시
         mapView = view?.findViewById(R.id.mapContainer)
@@ -165,9 +169,17 @@ class MapFragment : BottomSheetDialogFragment(), OnMapReadyCallback {
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location_ ->
                 if (location_ != null) {
-                    val address = getAddressFromLocation(location_.latitude, location_.longitude)
-                    country = address?.countryName.toString()
-                    city = address?.locality.toString()
+                    geocoder = Geocoder(requireContext(), Locale.getDefault())
+                    val addresses: List<Address> = geocoder.getFromLocation(location_.latitude.toDouble(), location_.longitude.toDouble(), 1)
+                        ?: emptyList()
+
+                    if(addresses.isNotEmpty()) {
+                        city = addresses[0].locality
+                        country = addresses[0].countryName
+                    } else {
+                        city = "Seoul"
+                        country = "South Korea"
+                    }
 
                     // SharedPreference
                     val sharedPref = requireActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE)
@@ -202,11 +214,6 @@ class MapFragment : BottomSheetDialogFragment(), OnMapReadyCallback {
                 Log.d("fatal", "ID: ${savedData.id}, Country: ${savedData.country}, City: ${savedData.city}")
             }
         }
-    }
-    private fun getAddressFromLocation(latitude: Double, longitude: Double): Address? {
-        val geocoder = Geocoder(requireContext())
-        val addresses: MutableList<Address>? = geocoder.getFromLocation(latitude, longitude, 1)
-        return if (addresses!!.isNotEmpty()) addresses?.get(0) else null
     }
 
     companion object {

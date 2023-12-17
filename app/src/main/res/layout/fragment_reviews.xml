@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Seoul, Korea"
+                android:text="Mountain View, United States"
                 android:textAlignment="viewStart"
                 android:textSize="18dp" />
         </LinearLayout>
