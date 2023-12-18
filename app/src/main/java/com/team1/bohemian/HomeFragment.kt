@@ -235,50 +235,57 @@ class HomeFragment: Fragment(), ChatRoomListener {
         // 첫 이미지로 스토리뷰 생성
         val imageContainer = view.findViewById<LinearLayout>(R.id.storyImageContainer)
         for (storyId in storyImageList.keys){
-            Log.d("fatal", "for storyId")
-            val uri = storyImageList[storyId]?.get(0)
+            val imageList = storyImageList[storyId]
+            if (!imageList.isNullOrEmpty()) {
+                Log.d("fatal", "for storyId")
+                val uri = imageList[0]
 
-            val imageView = ImageView(imageContainer.context)
-            val layoutParams = LinearLayout.LayoutParams(
-                dpToPx(imageView.resources, 170), // 이미지 뷰의 너비 (예: 100픽셀)
-                dpToPx(imageView.resources, 170)  // 이미지 뷰의 높이 (예: 100픽셀)
-            )
-            imageView.layoutParams = layoutParams
-            imageView.scaleType = ImageView.ScaleType.FIT_START
-            imageView.setPadding(10,0,10,0)
-            Glide.with(imageView.context)
-                .load(uri)
-                .centerCrop()
-                .into(imageView)
+                val imageView = ImageView(imageContainer.context)
+                val layoutParams = LinearLayout.LayoutParams(
+                    dpToPx(imageView.resources, 170), // 이미지 뷰의 너비 (예: 100픽셀)
+                    dpToPx(imageView.resources, 170)  // 이미지 뷰의 높이 (예: 100픽셀)
+                )
+                imageView.layoutParams = layoutParams
+                imageView.scaleType = ImageView.ScaleType.FIT_START
+                imageView.setPadding(10, 0, 10, 0)
+                Glide.with(imageView.context)
+                    .load(uri)
+                    .centerCrop()
+                    .into(imageView)
 
-            // 이미지 뷰를 부모 레이아웃에 추가
-            imageContainer.addView(imageView)
+                // 이미지 뷰를 부모 레이아웃에 추가
+                imageContainer.addView(imageView)
 
-            // ImageView에 클릭 리스너 추가: 스토리 액티비티 열고 인터페이스로 정보 전달
-            imageView.setOnClickListener {
-                val uid = storyList[storyId]?.get("uid")
-                val comment = storyList[storyId]?.get("comment")
-                val imageList = storyImageList[storyId]
+                // ImageView에 클릭 리스너 추가: 스토리 액티비티 열고 인터페이스로 정보 전달
+                imageView.setOnClickListener {
+                    val uid = storyList[storyId]?.get("uid")
+                    val comment = storyList[storyId]?.get("comment")
+                    val imageList = storyImageList[storyId]
 
-                // 이미지 URI를 String으로 변환
-                val stringImageList = imageList?.map { it.toString() }?.toMutableList()
+                    // 이미지 URI를 String으로 변환
+                    val stringImageList = imageList?.map { it.toString() }?.toMutableList()
 
-                // Room Database
-                val database = Room.databaseBuilder(requireContext(), AppDatabase::class.java, "database-name")
-                    .fallbackToDestructiveMigration()
-                    .build()
-                GlobalScope.launch(Dispatchers.IO) {
-                    val locationDataList = database.locationDataDao().getAllLocationData()
-                    val locationData = locationDataList.getOrNull(0)
+                    // Room Database
+                    val database = Room.databaseBuilder(
+                        requireContext(),
+                        AppDatabase::class.java,
+                        "database-name"
+                    )
+                        .fallbackToDestructiveMigration()
+                        .build()
+                    GlobalScope.launch(Dispatchers.IO) {
+                        val locationDataList = database.locationDataDao().getAllLocationData()
+                        val locationData = locationDataList.getOrNull(0)
 
-                    if (locationData != null) {
-                        val intent = Intent(activity, StoryActivity::class.java)
-                        intent.putExtra("country", locationData.country)
-                        intent.putExtra("city", locationData.city)
-                        intent.putExtra("uid", uid)
-                        intent.putExtra("comment", comment)
-                        intent.putStringArrayListExtra("imageList", ArrayList(stringImageList))
-                        startActivity(intent)
+                        if (locationData != null) {
+                            val intent = Intent(activity, StoryActivity::class.java)
+                            intent.putExtra("country", locationData.country)
+                            intent.putExtra("city", locationData.city)
+                            intent.putExtra("uid", uid)
+                            intent.putExtra("comment", comment)
+                            intent.putStringArrayListExtra("imageList", ArrayList(stringImageList))
+                            startActivity(intent)
+                        }
                     }
                 }
             }

@@ -44,6 +44,7 @@ class StoryActivity: AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {
             }
         })
+        binding?.textStoryComment?.text = comment
 
         // ViewPager2 초기화
         viewPager = findViewById(R.id.viewPager2)
