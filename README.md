@@ -49,4 +49,4 @@
 ### RoomDB
 ### Kotlin
 ### Google Maps API
-### OpenWeather API
+### OpenWeatherMap API
